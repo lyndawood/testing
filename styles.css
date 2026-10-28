@@ -88,6 +88,38 @@ body {
     }
 }
 
+/* Floating decorative SVGs */
+.floating-decoration {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    opacity: 0.15;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.decoration-1 {
+    top: 15%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.decoration-2 {
+    top: 70%;
+    right: 8%;
+    width: 100px;
+    height: 100px;
+    animation-delay: 2s;
+}
+
+.decoration-3 {
+    top: 35%;
+    right: 5%;
+    width: 90px;
+    height: 90px;
+    animation-delay: 4s;
+}
+
 .container {
     width: 100%;
     max-width: 900px;
@@ -115,12 +147,13 @@ header {
     margin-bottom: 10px;
 }
 
-.tea-leaf {
-    font-size: 1.5em;
+.header-icon {
+    width: 60px;
+    height: 60px;
     animation: sway 3s ease-in-out infinite;
 }
 
-.tea-leaf:nth-child(3) {
+.header-icon:nth-child(3) {
     animation-delay: 0.5s;
 }
 
@@ -206,12 +239,37 @@ main {
     justify-content: center;
 }
 
+.game-board-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    position: relative;
+}
+
 .game-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     width: 100%;
     max-width: 600px;
+}
+
+.board-decoration {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    animation: sway 4s ease-in-out infinite;
+}
+
+.board-left {
+    animation-delay: 0s;
+}
+
+.board-right {
+    animation-delay: 0.5s;
+    transform: scaleX(-1);
 }
 
 .card {
@@ -382,6 +440,17 @@ footer {
     transform: scale(1.2) rotate(10deg);
 }
 
+.btn-icon-svg {
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .btn-icon-svg {
+    transform: scale(1.2) rotate(10deg);
+}
+
 .btn-primary {
     background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
     color: white;
@@ -455,6 +524,13 @@ footer {
     position: relative;
     max-width: 500px;
     width: 90%;
+}
+
+.win-decoration {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    animation: bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes popIn {
@@ -563,9 +639,19 @@ footer {
         font-size: 0.95em;
     }
 
+    .header-icon {
+        width: 50px;
+        height: 50px;
+    }
+
     .game-board {
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
+    }
+
+    .board-decoration {
+        width: 60px;
+        height: 60px;
     }
 
     .card {
@@ -597,6 +683,11 @@ footer {
     .modal-content h2 {
         font-size: 1.8em;
     }
+
+    .win-decoration {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -617,13 +708,23 @@ footer {
         gap: 10px;
     }
 
-    .tea-leaf {
-        font-size: 1.2em;
+    .header-icon {
+        width: 40px;
+        height: 40px;
     }
 
     .game-board {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
+    }
+
+    .game-board-wrapper {
+        gap: 10px;
+    }
+
+    .board-decoration {
+        width: 50px;
+        height: 50px;
     }
 
     .card {
@@ -642,6 +743,23 @@ footer {
     }
 
     .btn {
+        padding: 10px 18px;
+        font-size: 0.85em;
+    }
+
+    .modal-content {
+        padding: 25px 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+
+    .win-decoration {
+        width: 80px;
+        height: 80px;
+    }
+}n {
         padding: 10px 18px;
         font-size: 0.85em;
     }

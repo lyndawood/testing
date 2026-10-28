@@ -12,14 +12,40 @@
         <div class="bubble bubble-2"></div>
         <div class="bubble bubble-3"></div>
         <div class="bubble bubble-4"></div>
+        
+        <!-- Floating tea leaves and decorations -->
+        <svg class="floating-decoration decoration-1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 10 Q70 30 60 50 Q70 70 50 90 Q30 70 40 50 Q30 30 50 10" fill="#d4a574" opacity="0.3"/>
+        </svg>
+        <svg class="floating-decoration decoration-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#8b4513" stroke-width="2" opacity="0.2"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="#8b4513" stroke-width="1.5" opacity="0.15"/>
+        </svg>
+        <svg class="floating-decoration decoration-3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 20 L60 40 L80 45 L65 60 L70 80 L50 70 L30 80 L35 60 L20 45 L40 40 Z" fill="#ffd700" opacity="0.2"/>
+        </svg>
     </div>
 
     <div class="container">
         <header>
             <div class="header-decoration">
-                <span class="tea-leaf">🍃</span>
+                <svg class="header-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Teapot illustration -->
+                    <ellipse cx="50" cy="60" rx="35" ry="25" fill="#d4a574" stroke="#8b4513" stroke-width="2"/>
+                    <rect x="30" y="35" width="40" height="25" rx="8" fill="#d4a574" stroke="#8b4513" stroke-width="2"/>
+                    <circle cx="20" cy="55" r="8" fill="none" stroke="#8b4513" stroke-width="2"/>
+                    <path d="M 75 50 Q 85 45 85 55 Q 85 65 75 60" fill="none" stroke="#8b4513" stroke-width="2"/>
+                    <path d="M 50 35 Q 50 20 55 10" stroke="#8b4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <circle cx="55" cy="8" r="3" fill="#8b4513"/>
+                </svg>
                 <h1>Tea Matching Game</h1>
-                <span class="tea-leaf">🍃</span>
+                <svg class="header-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Tea cup illustration -->
+                    <path d="M 30 40 L 35 70 Q 35 80 45 80 L 55 80 Q 65 80 65 70 L 70 40 Z" fill="#d4a574" stroke="#8b4513" stroke-width="2"/>
+                    <path d="M 70 50 Q 80 48 85 55 Q 85 65 75 68" fill="none" stroke="#8b4513" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="40" y1="50" x2="60" y2="50" stroke="#8b4513" stroke-width="1.5" opacity="0.5"/>
+                    <path d="M 45 55 Q 50 60 45 65" stroke="#a0826d" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
             </div>
             <p class="subtitle">Find all the matching pairs! ☕</p>
             
@@ -49,28 +75,64 @@
         </header>
 
         <main>
-            <div class="game-board" id="gameBoard"></div>
+            <div class="game-board-wrapper">
+                <svg class="board-decoration board-left" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Cute tea leaf -->
+                    <path d="M 50 20 Q 70 35 65 55 Q 60 70 50 80 Q 40 70 35 55 Q 30 35 50 20" fill="#d4a574" stroke="#8b4513" stroke-width="1.5" opacity="0.6"/>
+                    <path d="M 50 30 Q 60 40 55 55" stroke="#8b4513" stroke-width="1" fill="none" opacity="0.4"/>
+                </svg>
+                <div class="game-board" id="gameBoard"></div>
+                <svg class="board-decoration board-right" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Cute tea leaf -->
+                    <path d="M 50 20 Q 70 35 65 55 Q 60 70 50 80 Q 40 70 35 55 Q 30 35 50 20" fill="#d4a574" stroke="#8b4513" stroke-width="1.5" opacity="0.6"/>
+                    <path d="M 50 30 Q 60 40 55 55" stroke="#8b4513" stroke-width="1" fill="none" opacity="0.4"/>
+                </svg>
+            </div>
         </main>
 
         <footer>
             <button class="btn btn-primary" id="resetBtn">
-                <span class="btn-icon">🔄</span>
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 12 4 A 8 8 0 0 0 4 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M 4 8 L 4 4 L 8 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 New Game
             </button>
             <button class="btn btn-secondary" id="hintBtn">
-                <span class="btn-icon">💡</span>
+                <svg class="btn-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <text x="12" y="16" text-anchor="middle" font-size="14" font-weight="bold" fill="currentColor">?</text>
+                </svg>
                 Hint
             </button>
         </footer>
 
         <div class="modal" id="winModal">
             <div class="modal-content">
+                <svg class="win-decoration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Celebration teacup -->
+                    <path d="M 60 80 L 65 140 Q 65 155 80 155 L 120 155 Q 135 155 135 140 L 140 80 Z" fill="#d4a574" stroke="#8b4513" stroke-width="2"/>
+                    <path d="M 140 100 Q 155 95 160 110 Q 160 130 145 135" fill="none" stroke="#8b4513" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M 80 80 L 120 80 Q 125 80 125 75 L 75 75 Q 75 80 80 80" fill="#d4a574" stroke="#8b4513" stroke-width="2"/>
+                    <!-- Steam wisps -->
+                    <path d="M 90 70 Q 85 50 90 30" stroke="#a0826d" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+                    <path d="M 100 70 Q 95 45 100 20" stroke="#a0826d" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+                    <path d="M 110 70 Q 115 50 110 30" stroke="#a0826d" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+                    <!-- Stars -->
+                    <circle cx="50" cy="40" r="3" fill="#ffd700"/>
+                    <circle cx="150" cy="50" r="3" fill="#ffd700"/>
+                    <circle cx="40" cy="120" r="2.5" fill="#ffd700"/>
+                    <circle cx="160" cy="110" r="2.5" fill="#ffd700"/>
+                </svg>
                 <div class="confetti"></div>
                 <h2>🎉 You Won! 🎉</h2>
                 <p class="win-message">Amazing job! You're a tea master! ☕✨</p>
                 <p id="winStats"></p>
                 <button class="btn btn-primary" onclick="location.reload()">
-                    <span class="btn-icon">🎮</span>
+                    <svg class="btn-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M 12 6 L 15 9 L 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     Play Again
                 </button>
             </div>
