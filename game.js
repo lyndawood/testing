@@ -24,14 +24,19 @@ let mouse = new THREE.Vector2();
 // Initialize Three.js
 function initThreeJS() {
     const canvas = document.getElementById('gameCanvas');
+    const gameArea = document.querySelector('.game-area');
+    
+    // Set canvas size to match container
+    const width = gameArea.clientWidth;
+    const height = gameArea.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
     
     // Scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0f172a);
     
     // Camera
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
     camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 8;
     
@@ -66,8 +71,12 @@ function initThreeJS() {
 
 function onWindowResize() {
     const canvas = document.getElementById('gameCanvas');
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
+    const gameArea = document.querySelector('.game-area');
+    const width = gameArea.clientWidth;
+    const height = gameArea.clientHeight;
+    
+    canvas.width = width;
+    canvas.height = height;
     
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
