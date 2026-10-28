@@ -22,3 +22,10 @@ test('sum handles fractional inputs', () => {
   assert.strictEqual(sum(-1.5, 1.5), 0);
   assert.strictEqual(sum(3.14, 2.86), 6);
 });
+
+test('sum handles zero as either operand', () => {
+  assert.strictEqual(sum(0, 5), 5);
+  assert.strictEqual(sum(10, 0), 10);
+  assert.strictEqual(sum(0, -3), -3);
+  assert.strictEqual(sum(0, 0), 0);
+});
