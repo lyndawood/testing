@@ -26,9 +26,17 @@ function initThreeJS() {
     const canvas = document.getElementById('gameCanvas');
     const gameArea = document.querySelector('.game-area');
     
+    if (!canvas || !gameArea) {
+        console.error('Canvas or game area not found');
+        return;
+    }
+    
     // Set canvas size to match container
     const width = gameArea.clientWidth;
     const height = gameArea.clientHeight;
+    
+    console.log('Initializing Three.js with dimensions:', width, height);
+    
     canvas.width = width;
     canvas.height = height;
     
@@ -200,9 +208,11 @@ function createGameBoard() {
     // Create cards in a grid
     const cols = 4;
     const rows = 4;
-    const spacing = 2;
+    const spacing = 1.8;
     const startX = -(cols - 1) * spacing / 2;
     const startY = (rows - 1) * spacing / 2;
+    
+    console.log('Creating game board with', shuffledEmojis.length, 'cards');
     
     shuffledEmojis.forEach((emoji, index) => {
         const col = index % cols;
@@ -217,6 +227,8 @@ function createGameBoard() {
         cardMeshes.push(card.children[0]);
         gameState.cards.push(card.children[0].userData);
     });
+    
+    console.log('Game board created with', cardMeshes.length, 'cards');
 }
 
 // Flip card animation
