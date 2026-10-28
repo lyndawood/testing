@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testing Project</title>
+  <style>
+    :root {
+      --coral: #FF6B5B;
+      --navy: #1A2B4A;
+      --mint: #A8E6D5;
+      --cream: #F5F5F5;
+      --dark-text: #0F1419;
+      --light-text: #FFFFFF;
+      --gray: #B0B8C1;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--navy);
+      color: var(--dark-text);
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 235px;
+      background-color: var(--coral);
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark-text);
+      letter-spacing: -0.5px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .nav-item {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--dark-text);
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      padding: var(--spacing-sm) 0;
+    }
+
+    .nav-item:hover {
+      opacity: 0.8;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      background-color: var(--navy);
+      padding: var(--spacing-xl);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .header-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--light-text);
+      line-height: 1.2;
+    }
+
+    .header-subtitle {
+      font-size: 18px;
+      color: var(--gray);
+      font-weight: 400;
+    }
+
+    /* CTA Card */
+    .cta-card {
+      background-color: var(--mint);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      max-width: 100%;
+    }
+
+    .cta-card-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--dark-text);
+      line-height: 1.2;
+    }
+
+    .cta-button {
+      background-color: var(--coral);
+      color: var(--dark-text);
+      border: none;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: 32px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: fit-content;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .cta-button:active {
+      transform: translateY(0);
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .card {
+      background-color: var(--cream);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      background-color: var(--coral);
+      border-radius: 50%;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--dark-text);
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .skeleton-line {
+      height: 12px;
+      background-color: var(--gray);
+      border-radius: 6px;
+      opacity: 0.3;
+    }
+
+    .skeleton-line:nth-child(1) {
+      width: 100%;
+    }
+
+    .skeleton-line:nth-child(2) {
+      width: 85%;
+    }
+
+    .skeleton-line:nth-child(3) {
+      width: 70%;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: var(--spacing-lg);
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-lg);
+      }
+
+      .nav {
+        flex-direction: row;
+        gap: var(--spacing-lg);
+      }
+
+      .main {
+        padding: var(--spacing-lg);
+        min-height: 100vh;
+      }
+
+      .header-title {
+        font-size: 32px;
+      }
+
+      .cta-card-title {
+        font-size: 24px;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav {
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .header-title {
+        font-size: 24px;
+      }
+
+      .cta-card-title {
+        font-size: 20px;
+      }
+
+      .main {
+        padding: var(--spacing-md);
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .nav-item,
+      .cta-button,
+      .card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">TESTING</div>
+      <nav class="nav">
+        <div class="nav-item">Overview</div>
+        <div class="nav-item">Tests</div>
+        <div class="nav-item">Docs</div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Header -->
+      <section class="header">
+        <h1 class="header-title">Good evening, explorer</h1>
+        <p class="header-subtitle">A testing workspace for ambitious ideas</p>
+      </section>
+
+      <!-- CTA Card -->
+      <section class="cta-card">
+        <h2 class="cta-card-title">Make room for your next test</h2>
+        <button class="cta-button">Start testing</button>
+      </section>
+
+      <!-- Cards Grid -->
+      <section class="cards-grid">
+        <article class="card">
+          <div class="card-icon"></div>
+          <h3 class="card-title">In progress</h3>
+          <div class="card-content">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-icon"></div>
+          <h3 class="card-title">Ready to explore</h3>
+          <div class="card-content">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
