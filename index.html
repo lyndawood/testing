@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Matching Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍵 Tea Matching Game</h1>
+            <p class="subtitle">Match tea types with their descriptions!</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="label">Matches:</span>
+                <span class="value" id="matches">0</span> / 6
+            </div>
+            <div class="stat">
+                <span class="label">Attempts:</span>
+                <span class="value" id="attempts">0</span>
+            </div>
+            <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+        </div>
+
+        <div class="game-board">
+            <div class="column">
+                <h2>Tea Types</h2>
+                <div class="cards" id="teaTypes"></div>
+            </div>
+            <div class="column">
+                <h2>Descriptions</h2>
+                <div class="cards" id="descriptions"></div>
+            </div>
+        </div>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
