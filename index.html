@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ember & Oak - Neighborhood coffee roaster. Freshly roasted, locally loved.">
+    <title>Ember & Oak - Specialty Coffee Roaster</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="#" class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 12c0-2.2 1.8-4 4-4h8c2.2 0 4 1.8 4 4v8c0 2.2-1.8 4-4 4h-8c-2.2 0-4-1.8-4-4v-8z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M12 6v2M20 6v2M10 24v2c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Ember & Oak
+                </a>
+                <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="#roasts">Our Roasts</a></li>
+                    <li><a href="#story">Our Story</a></li>
+                    <li><a href="#hours">Hours</a></li>
+                    <li><a href="#contact" class="btn btn-primary">Visit Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Freshly Roasted, Locally Loved</h1>
+                <p class="hero-subtitle">Discover the art of specialty coffee at Ember & Oak, your neighborhood roaster since 2019.</p>
+                <div class="hero-cta">
+                    <a href="#roasts" class="btn btn-primary btn-large">Explore Our Roasts</a>
+                    <a href="#hours" class="btn btn-secondary btn-large">Find Us</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" class="coffee-cup">
+                    <!-- Cup body -->
+                    <path d="M 50 80 L 60 200 Q 60 220 80 220 L 120 220 Q 140 220 140 200 L 150 80 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <!-- Handle -->
+                    <path d="M 150 100 Q 180 100 180 150 Q 180 200 150 200" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <!-- Coffee inside -->
+                    <ellipse cx="100" cy="200" rx="40" ry="8" fill="currentColor" opacity="0.3"/>
+                    <path d="M 65 150 Q 70 140 75 150 Q 80 140 85 150 Q 90 140 95 150 Q 100 140 105 150 Q 110 140 115 150 Q 120 140 125 150 Q 130 140 135 150" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/>
+                    <!-- Steam -->
+                    <path d="M 75 70 Q 75 50 85 40" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+                    <path d="M 100 70 Q 100 45 110 30" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+                    <path d="M 125 70 Q 125 50 135 40" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Featured Roasts Section -->
+    <section id="roasts" class="roasts">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Featured Roasts</h2>
+                <p>Carefully selected and roasted to perfection</p>
+            </div>
+            <div class="roasts-grid">
+                <article class="roast-card">
+                    <div class="roast-badge">Light</div>
+                    <h3>Morning Mist</h3>
+                    <p class="roast-origin">Ethiopian Highlands</p>
+                    <p class="roast-description">Bright and floral with notes of bergamot and jasmine. Perfect for starting your day with clarity and joy.</p>
+                    <div class="roast-details">
+                        <span class="detail">
+                            <strong>Acidity:</strong>
+                            <div class="bar">
+                                <div class="fill" style="width: 75%"></div>
+                            </div>
+                        </span>
+                        <span class="detail">
+                            <strong>Body:</strong>
+                            <div class="bar">
+                                <div class="fill" style="width: 40%"></div>
+                            </div>
+                        </span>
+                    </div>
+                    <button class="btn btn-outline">Learn More</button>
+                </article>
+
+                <article class="roast-card featured">
+                    <div class="roast-badge featured-badge">Medium</div>
+                    <h3>Ember's Heart</h3>
+                    <p class="roast-origin">Colombian Geisha</p>
+                    <p class="roast-description">Our signature blend. Balanced sweetness with chocolate and caramel undertones. The soul of our roastery.</p>
+                    <div class="roast-details">
+                        <span class="detail">
+                            <strong>Acidity:</strong>
+                            <div class="bar">
+                                <div class="fill" style="width: 55%"></div>
+                            </div>
+                        </span>
+                        <span class="detail">
+                            <strong>Body:</strong>
+                            <div class="bar">
+                                <div class="fill" style="width: 70%"></div>
+                            </div>
+                        </span>
+                    </div>
+                    <button class="btn btn-primary">Learn More</button>
+                </article>
+
+                <article class="roast-card">
+                    <div class="roast-badge">Dark</div>
+                    <h3>Oak's Legacy</h3>
+                    <p class="roast-origin">Brazilian Santos</p>
+                    <p class="roast-description">Bold and rich with deep notes of dark chocolate and roasted nuts. Ideal for espresso and milk-based drinks.</p>
+                    <div class="roast-details">
+                        <span class="detail">
+                            <strong>Acidity:</strong>
+                            <div class="bar">
+                                <div class="fill" style="width: 30%"></div>
+                            </div>
+                        </span>
+                        <span class="detail">
+                            <strong>Body:</strong>
+                            <div class="bar">
+                                <div class="fill" style="width: 85%"></div>
+                            </div>
+                        </span>
+                    </div>
+                    <button class="btn btn-outline">Learn More</button>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section id="story" class="story">
+        <div class="container">
+            <div class="story-content">
+                <div class="story-text">
+                    <h2>Our Story</h2>
+                    <p>Ember & Oak was born from a simple passion: to bring exceptional coffee to our neighborhood. In 2019, we opened our doors with a single roaster and a dream to create something meaningful.</p>
+                    <p>Every bean we roast tells a story of the farmers who grew it, the land it came from, and the care we put into bringing out its unique character. We believe in direct relationships with our suppliers and sustainable practices that honor both people and planet.</p>
+                    <p>Today, we're proud to be part of this community. Whether you're a coffee enthusiast or just looking for a great cup, we invite you to experience the Ember & Oak difference.</p>
+                    <div class="story-stats">
+                        <div class="stat">
+                            <div class="stat-number">5+</div>
+                            <div class="stat-label">Years of Roasting</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Origin Countries</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Specialty Grade</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-visual">
+                    <svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg" class="roaster-icon">
+                        <!-- Roaster drum -->
+                        <rect x="40" y="80" width="120" height="100" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <!-- Drum interior lines -->
+                        <line x1="50" y1="90" x2="150" y2="90" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="50" y1="110" x2="150" y2="110" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="50" y1="130" x2="150" y2="130" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="50" y1="150" x2="150" y2="150" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="50" y1="170" x2="150" y2="170" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <!-- Beans inside -->
+                        <circle cx="70" cy="120" r="4" fill="currentColor" opacity="0.6"/>
+                        <circle cx="90" cy="135" r="4" fill="currentColor" opacity="0.6"/>
+                        <circle cx="110" cy="125" r="4" fill="currentColor" opacity="0.6"/>
+                        <circle cx="130" cy="140" r="4" fill="currentColor" opacity="0.6"/>
+                        <circle cx="75" cy="155" r="4" fill="currentColor" opacity="0.6"/>
+                        <circle cx="115" cy="150" r="4" fill="currentColor" opacity="0.6"/>
+                        <!-- Chute -->
+                        <path d="M 100 180 L 95 220 L 105 220 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <!-- Cooling tray -->
+                        <rect x="70" y="220" width="60" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <line x1="80" y1="220" x2="80" y2="250" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="90" y1="220" x2="90" y2="250" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="100" y1="220" x2="100" y2="250" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="110" y1="220" x2="110" y2="250" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <line x1="120" y1="220" x2="120" y2="250" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+                        <!-- Roasted beans on tray -->
+                        <circle cx="80" cy="235" r="3" fill="currentColor" opacity="0.8"/>
+                        <circle cx="95" cy="240" r="3" fill="currentColor" opacity="0.8"/>
+                        <circle cx="110" cy="235" r="3" fill="currentColor" opacity="0.8"/>
+                        <circle cx="120" cy="238" r="3" fill="currentColor" opacity="0.8"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hours Section -->
+    <section id="hours" class="hours">
+        <div class="container">
+            <div class="section-header">
+                <h2>Visit Us</h2>
+                <p>Stop by for a fresh cup and great conversation</p>
+            </div>
+            <div class="hours-content">
+                <div class="hours-card">
+                    <h3>Hours</h3>
+                    <ul class="hours-list">
+                        <li>
+                            <span class="day">Monday – Friday</span>
+                            <span class="time">7:00 AM – 6:00 PM</span>
+                        </li>
+                        <li>
+                            <span class="day">Saturday</span>
+                            <span class="time">8:00 AM – 7:00 PM</span>
+                        </li>
+                        <li>
+                            <span class="day">Sunday</span>
+                            <span class="time">9:00 AM – 5:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="hours-card">
+                    <h3>Location</h3>
+                    <address>
+                        <p>427 Oak Street</p>
+                        <p>Portland, OR 97214</p>
+                        <p><a href="tel:+15035551234">(503) 555-1234</a></p>
+                        <p><a href="mailto:hello@emberandoak.com">hello@emberandoak.com</a></p>
+                    </address>
+                </div>
+                <div class="hours-card">
+                    <h3>What to Expect</h3>
+                    <ul class="features-list">
+                        <li>Single-origin and blend options</li>
+                        <li>Espresso bar with expert baristas</li>
+                        <li>Whole bean and ground coffee</li>
+                        <li>Cozy seating and WiFi</li>
+                        <li>Roasting tours available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Ember & Oak</h4>
+                    <p>Specialty coffee roasted with care for our community.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram" title="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <circle cx="17.5" cy="6.5" r="1.5"></circle>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Facebook" title="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h3v8h4v-8h3l1-4h-4V8a2 2 0 0 1 2-2h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Twitter" title="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2s9 5 20 5a9.5 9.5 0 0 0-9-5.5c4.75 2.25 7-7 7-7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#roasts">Our Roasts</a></li>
+                        <li><a href="#story">Our Story</a></li>
+                        <li><a href="#hours">Hours & Location</a></li>
+                        <li><a href="#">Wholesale</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Get updates on new roasts and special offers.</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+                        <input type="email" placeholder="Your email" required aria-label="Email address">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ember & Oak Coffee Roasters. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
