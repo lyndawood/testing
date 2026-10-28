@@ -457,7 +457,21 @@ document.getElementById('newGameBtn').addEventListener('click', newGame);
 document.getElementById('hintBtn').addEventListener('click', showHint);
 document.getElementById('playAgainBtn').addEventListener('click', newGame);
 
-// Initialize
-initThreeJS();
-newGame();
-animate();
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM loaded, initializing game');
+        setTimeout(() => {
+            initThreeJS();
+            newGame();
+            animate();
+        }, 100);
+    });
+} else {
+    console.log('DOM already loaded, initializing game');
+    setTimeout(() => {
+        initThreeJS();
+        newGame();
+        animate();
+    }, 100);
+}
