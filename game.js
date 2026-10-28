@@ -459,12 +459,13 @@ document.getElementById('hintBtn').addEventListener('click', showHint);
 document.getElementById('playAgainBtn').addEventListener('click', newGame);
 
 // Initialize on page load
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initThreeJS, 100);
-        newGame();
-    });
-} else {
-    setTimeout(initThreeJS, 100);
+function startGame() {
+    initThreeJS();
     newGame();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startGame);
+} else {
+    startGame();
 }
