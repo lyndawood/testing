@@ -23,6 +23,8 @@ class MatchingGame {
     this.resetBtn.addEventListener('click', () => this.reset());
     this.hintBtn.addEventListener('click', () => this.showHint());
     this.playAgainBtn.addEventListener('click', () => this.reset());
+    this.gameBoard.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+    this.gameBoard.addEventListener('mouseleave', () => this.resetCardTilt());
 
     this.init();
   }
@@ -44,6 +46,34 @@ class MatchingGame {
         flipped: false,
         matched: false,
       }));
+  }
+
+  handleMouseMove(e) {
+    const cards = this.gameBoard.querySelectorAll('.card');
+    cards.forEach((card) => {
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      const rotateX = (mouseY - centerY) / 10;
+      const rotateY = (centerX - mouseX) / 10;
+      
+      if (!card.classList.contains('flipped') && !card.classList.contains('matched')) {
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+      }
+    });
+  }
+
+  resetCardTilt() {
+    const cards = this.gameBoard.querySelectorAll('.card');
+    cards.forEach((card) => {
+      if (!card.classList.contains('flipped') && !card.classList.contains('matched')) {
+        card.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+      }
+    });
   }
 
   render() {
