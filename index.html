@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmic Number Quest</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #ec4899;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-light: #334155;
+      --text: #f1f5f9;
+      --text-muted: #cbd5e1;
+      --border: #475569;
+      --radius: 12px;
+      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --surface: #e2e8f0;
+        --surface-light: #cbd5e1;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --border: #cbd5e1;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .game-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .game-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 4px);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      padding: 0.875rem 1rem;
+      background: var(--surface-light);
+      border: 2px solid var(--border);
+      border-radius: calc(var(--radius) - 4px);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    input[type="number"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    button {
+      padding: 0.875rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: calc(var(--radius) - 4px);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      padding: 1rem;
+      border-radius: calc(var(--radius) - 4px);
+      font-weight: 600;
+      text-align: center;
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .feedback.hidden {
+      display: none;
+    }
+
+    .feedback.too-low {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .feedback.too-high {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .feedback.correct {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .guess-history {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 4px);
+      padding: 1rem;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .guess-history-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .guess-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .guess-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.5rem;
+      height: 2.5rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-secondary {
+      background: var(--surface-light);
+      color: var(--text);
+      border: 1px solid var(--border);
+      flex: 1;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--border);
+      box-shadow: none;
+    }
+
+    .game-over {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .game-over-emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .game-over-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-over-stats {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 480px) {
+      .game-card {
+        padding: 1.5rem;
+      }
+
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="game-card">
+      <div class="header">
+        <h1 class="title">🚀 Cosmic Quest</h1>
+        <p class="subtitle">Guess the secret number between 1 and 100</p>
+      </div>
+
+      <div id="gameContainer" class="game-content">
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-label">Attempts</div>
+            <div class="stat-value" id="attempts">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Best Score</div>
+            <div class="stat-value" id="bestScore">—</div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            id="guessInput"
+            min="1"
+            max="100"
+            placeholder="Enter your guess..."
+            aria-label="Enter your guess"
+          />
+          <button id="guessBtn" onclick="makeGuess()">Guess</button>
+        </div>
+
+        <div id="feedback" class="feedback hidden"></div>
+
+        <div id="guessHistoryContainer" class="guess-history" style="display: none;">
+          <div class="guess-history-label">Your Guesses</div>
+          <div class="guess-list" id="guessList"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-secondary" onclick="newGame()">New Game</button>
+          <button class="btn-secondary" onclick="showHint()">💡 Hint</button>
+        </div>
+      </div>
+
+      <div id="gameOverContainer" style="display: none;">
+        <div class="game-over">
+          <div class="game-over-emoji" id="gameOverEmoji">🎉</div>
+          <div class="game-over-text" id="gameOverText">You Won!</div>
+          <div class="game-over-stats" id="gameOverStats"></div>
+          <button onclick="newGame()" style="width: 100%;">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let secretNumber;
+    let attempts = 0;
+    let guesses = [];
+    let gameOver = false;
+    let bestScore = localStorage.getItem('cosmicQuestBestScore') || null;
+
+    function initGame() {
+      secretNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 0;
+      guesses = [];
+      gameOver = false;
+      document.getElementById('gameContainer').style.display = 'flex';
+      document.getElementById('gameOverContainer').style.display = 'none';
+      document.getElementById('guessInput').value = '';
+      document.getElementById('guessInput').focus();
+      document.getElementById('feedback').classList.add('hidden');
+      document.getElementById('guessHistoryContainer').style.display = 'none';
+      updateStats();
+    }
+
+    function makeGuess() {
+      if (gameOver) return;
+
+      const guess = parseInt(document.getElementById('guessInput').value);
+
+      if (isNaN(guess) || guess < 1 || guess > 100) {
+        showFeedback('Please enter a number between 1 and 100', 'warning');
+        return;
+      }
+
+      attempts++;
+      guesses.push(guess);
+      document.getElementById('guessInput').value = '';
+
+      if (guesses.length > 1) {
+        document.getElementById('guessHistoryContainer').style.display = 'block';
+      }
+      updateGuessHistory();
+      updateStats();
+
+      if (guess === secretNumber) {
+        endGame(true);
+      } else if (guess < secretNumber) {
+        showFeedback(`📈 Too low! The number is higher.`, 'too-low');
+      } else {
+        showFeedback(`📉 Too high! The number is lower.`, 'too-high');
+      }
+
+      document.getElementById('guessInput').focus();
+    }
+
+    function showFeedback(message, type) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = message;
+      feedback.className = `feedback ${type}`;
+    }
+
+    function updateStats() {
+      document.getElementById('attempts').textContent = attempts;
+      document.getElementById('bestScore').textContent = bestScore || '—';
+    }
+
+    function updateGuessHistory() {
+      const guessList = document.getElementById('guessList');
+      guessList.innerHTML = guesses
+        .map(g => `<div class="guess-badge">${g}</div>`)
+        .join('');
+    }
+
+    function showHint() {
+      if (gameOver) return;
+
+      const low = guesses.filter(g => g < secretNumber).sort((a, b) => b - a)[0];
+      const high = guesses.filter(g => g > secretNumber).sort((a, b) => a - b)[0];
+
+      let hint = '';
+      if (low && high) {
+        hint = `The number is between ${low} and ${high}`;
+      } else if (low) {
+        hint = `The number is higher than ${low}`;
+      } else if (high) {
+        hint = `The number is lower than ${high}`;
+      } else {
+        const range = Math.floor(secretNumber / 2);
+        hint = `Try a number around ${range}-${secretNumber + range}`;
+      }
+
+      showFeedback(`💡 Hint: ${hint}`, 'warning');
+    }
+
+    function endGame(won) {
+      gameOver = true;
+      document.getElementById('gameContainer').style.display = 'none';
+      document.getElementById('gameOverContainer').style.display = 'block';
+
+      if (won) {
+        document.getElementById('gameOverEmoji').textContent = '🎉';
+        document.getElementById('gameOverText').textContent = 'You Won!';
+        document.getElementById('gameOverStats').innerHTML = `
+          <p>You found the number <strong>${secretNumber}</strong> in <strong>${attempts}</strong> attempt${attempts !== 1 ? 's' : ''}!</p>
+        `;
+
+        if (!bestScore || attempts < bestScore) {
+          bestScore = attempts;
+          localStorage.setItem('cosmicQuestBestScore', bestScore);
+          document.getElementById('gameOverStats').innerHTML += `<p style="color: var(--success); margin-top: 0.5rem;">🏆 New best score!</p>`;
+        }
+      }
+    }
+
+    function newGame() {
+      initGame();
+    }
+
+    // Allow Enter key to submit guess
+    document.getElementById('guessInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        makeGuess();
+      }
+    });
+
+    // Initialize game on load
+    initGame();
+  </script>
+</body>
+</html>
