@@ -1,9 +1,15 @@
 {
   "name": "testing",
   "version": "1.0.0",
-  "description": "A simple testing example",
+  "description": "A professional portfolio website",
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
   }
 }

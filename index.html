@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio - Creative Developer & Designer</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-content">
+        <a href="#" class="logo">Portfolio</a>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="theme-toggle" aria-label="Toggle dark mode">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Hi, I'm a Creative Developer</h1>
+        <p class="hero-subtitle">I craft beautiful, functional digital experiences that solve real problems</p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">View My Work</a>
+          <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <svg viewBox="0 0 200 200" class="hero-shape">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:var(--accent);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:var(--primary);stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="80" fill="url(#grad1)" opacity="0.1"/>
+          <circle cx="100" cy="100" r="60" fill="none" stroke="var(--primary)" stroke-width="2" opacity="0.3"/>
+          <circle cx="100" cy="100" r="40" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.5"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <div class="container">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>I'm a passionate developer with 5+ years of experience building web applications and digital products. I specialize in creating intuitive user interfaces and writing clean, maintainable code.</p>
+          <p>When I'm not coding, you'll find me exploring new design trends, contributing to open source, or sharing knowledge with the developer community.</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Projects Completed</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">30+</span>
+            <span class="stat-label">Happy Clients</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">5+</span>
+            <span class="stat-label">Years Experience</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="projects">
+    <div class="container">
+      <h2>Featured Projects</h2>
+      <div class="projects-grid">
+        <article class="project-card">
+          <div class="project-image">
+            <svg viewBox="0 0 300 200" class="project-placeholder">
+              <rect width="300" height="200" fill="var(--primary)" opacity="0.1"/>
+              <circle cx="150" cy="100" r="40" fill="var(--accent)" opacity="0.3"/>
+              <rect x="80" y="130" width="140" height="30" fill="var(--primary)" opacity="0.2" rx="4"/>
+            </svg>
+          </div>
+          <div class="project-content">
+            <h3>E-Commerce Platform</h3>
+            <p>A full-stack e-commerce solution with real-time inventory management and payment integration.</p>
+            <div class="project-tags">
+              <span class="tag">React</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">MongoDB</span>
+            </div>
+            <a href="#" class="project-link">View Project →</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image">
+            <svg viewBox="0 0 300 200" class="project-placeholder">
+              <rect width="300" height="200" fill="var(--accent)" opacity="0.1"/>
+              <rect x="50" y="40" width="60" height="60" fill="var(--accent)" opacity="0.3" rx="4"/>
+              <rect x="130" y="40" width="60" height="60" fill="var(--primary)" opacity="0.3" rx="4"/>
+              <rect x="210" y="40" width="40" height="60" fill="var(--accent)" opacity="0.2" rx="4"/>
+            </svg>
+          </div>
+          <div class="project-content">
+            <h3>Analytics Dashboard</h3>
+            <p>Interactive data visualization dashboard with real-time metrics and customizable reports.</p>
+            <div class="project-tags">
+              <span class="tag">Vue.js</span>
+              <span class="tag">D3.js</span>
+              <span class="tag">Firebase</span>
+            </div>
+            <a href="#" class="project-link">View Project →</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image">
+            <svg viewBox="0 0 300 200" class="project-placeholder">
+              <rect width="300" height="200" fill="var(--primary)" opacity="0.1"/>
+              <circle cx="75" cy="100" r="35" fill="var(--primary)" opacity="0.3"/>
+              <circle cx="150" cy="100" r="35" fill="var(--accent)" opacity="0.3"/>
+              <circle cx="225" cy="100" r="35" fill="var(--primary)" opacity="0.2"/>
+            </svg>
+          </div>
+          <div class="project-content">
+            <h3>Social Media App</h3>
+            <p>Mobile-first social platform with real-time messaging and content sharing capabilities.</p>
+            <div class="project-tags">
+              <span class="tag">React Native</span>
+              <span class="tag">WebSocket</span>
+              <span class="tag">PostgreSQL</span>
+            </div>
+            <a href="#" class="project-link">View Project →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="skills">
+    <div class="container">
+      <h2>Skills & Technologies</h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3>Frontend</h3>
+          <ul class="skill-list">
+            <li>React / Vue.js</li>
+            <li>TypeScript</li>
+            <li>Tailwind CSS</li>
+            <li>Web APIs</li>
+          </ul>
+        </div>
+        <div class="skill-category">
+          <h3>Backend</h3>
+          <ul class="skill-list">
+            <li>Node.js / Express</li>
+            <li>Python / Django</li>
+            <li>PostgreSQL</li>
+            <li>REST APIs</li>
+          </ul>
+        </div>
+        <div class="skill-category">
+          <h3>Tools & DevOps</h3>
+          <ul class="skill-list">
+            <li>Git / GitHub</li>
+            <li>Docker</li>
+            <li>CI/CD Pipelines</li>
+            <li>AWS</li>
+          </ul>
+        </div>
+        <div class="skill-category">
+          <h3>Design</h3>
+          <ul class="skill-list">
+            <li>UI/UX Design</li>
+            <li>Figma</li>
+            <li>Responsive Design</li>
+            <li>Accessibility</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2>Let's Work Together</h2>
+      <p class="contact-intro">I'm always interested in hearing about new projects and opportunities.</p>
+      <div class="contact-content">
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+        <div class="contact-info">
+          <div class="contact-item">
+            <h3>Email</h3>
+            <a href="mailto:hello@example.com">hello@example.com</a>
+          </div>
+          <div class="contact-item">
+            <h3>Social</h3>
+            <div class="social-links">
+              <a href="#" aria-label="GitHub">GitHub</a>
+              <a href="#" aria-label="LinkedIn">LinkedIn</a>
+              <a href="#" aria-label="Twitter">Twitter</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <h3>Location</h3>
+            <p>San Francisco, CA</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 My Portfolio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
