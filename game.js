@@ -20,6 +20,7 @@ let scene, camera, renderer;
 let cardMeshes = [];
 let raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
+let animationFrameId = null;
 
 // Initialize Three.js
 function initThreeJS() {
@@ -31,14 +32,11 @@ function initThreeJS() {
         return;
     }
     
-    // Set canvas size to match container
+    // Get dimensions
     const width = gameArea.clientWidth;
     const height = gameArea.clientHeight;
     
     console.log('Initializing Three.js with dimensions:', width, height);
-    
-    canvas.width = width;
-    canvas.height = height;
     
     // Scene
     scene = new THREE.Scene();
@@ -49,10 +47,11 @@ function initThreeJS() {
     camera.position.z = 8;
     
     // Renderer
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowShadowMap;
     
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -63,6 +62,7 @@ function initThreeJS() {
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.camera.far = 50;
     scene.add(directionalLight);
     
     const pointLight = new THREE.PointLight(0x6366f1, 0.5);
@@ -75,16 +75,19 @@ function initThreeJS() {
     // Mouse events
     canvas.addEventListener('click', onCanvasClick);
     canvas.addEventListener('mousemove', onCanvasMouseMove);
+    
+    // Start animation loop
+    animate();
 }
 
 function onWindowResize() {
     const canvas = document.getElementById('gameCanvas');
     const gameArea = document.querySelector('.game-area');
+    
+    if (!gameArea) return;
+    
     const width = gameArea.clientWidth;
     const height = gameArea.clientHeight;
-    
-    canvas.width = width;
-    canvas.height = height;
     
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -107,7 +110,7 @@ function onCanvasClick(event) {
         const card = clickedMesh.userData;
         
         if (!card.flipped && !card.matched && !gameState.selectedCards.includes(card)) {
-            flipCard(card);
+            flipCard(card, clickedMesh);
         }
     }
 }
@@ -129,9 +132,6 @@ function onCanvasMouseMove(event) {
 
 // Create 3D card
 function createCard(emoji, index) {
-    const group = new THREE.Group();
-    
-    // Card geometry
     const geometry = new THREE.BoxGeometry(1.5, 2, 0.1);
     
     // Front face (with emoji)
@@ -172,8 +172,8 @@ function createCard(emoji, index) {
         backMaterial, // left
         backMaterial, // top
         backMaterial, // bottom
-        backMaterial, // front (will be rotated)
-        frontMaterial, // back (will be rotated)
+        backMaterial, // front
+        frontMaterial, // back
     ];
     
     const mesh = new THREE.Mesh(geometry, materials);
@@ -191,14 +191,13 @@ function createCard(emoji, index) {
         index: index,
     };
     
-    group.add(mesh);
-    return group;
+    return mesh;
 }
 
 // Create game board
 function createGameBoard() {
     // Clear existing cards
-    cardMeshes.forEach(mesh => scene.remove(mesh.parent));
+    cardMeshes.forEach(mesh => scene.remove(mesh));
     cardMeshes = [];
     gameState.cards = [];
     
@@ -224,24 +223,24 @@ function createGameBoard() {
         card.position.z = 0;
         
         scene.add(card);
-        cardMeshes.push(card.children[0]);
-        gameState.cards.push(card.children[0].userData);
+        cardMeshes.push(card);
+        gameState.cards.push(card.userData);
     });
     
     console.log('Game board created with', cardMeshes.length, 'cards');
 }
 
 // Flip card animation
-function flipCard(card) {
+function flipCard(card, mesh) {
     gameState.selectedCards.push(card);
     gameState.moves++;
     updateStats();
     
     // Animate flip
-    const startRotation = card.parent.rotation.y;
+    const startRotation = mesh.rotation.y;
     const targetRotation = startRotation + Math.PI;
     
-    animateCardFlip(card.parent, startRotation, targetRotation, () => {
+    animateCardFlip(mesh, startRotation, targetRotation, () => {
         card.flipped = true;
         
         if (gameState.selectedCards.length === 2) {
@@ -250,7 +249,7 @@ function flipCard(card) {
     });
 }
 
-function animateCardFlip(cardGroup, startRot, targetRot, onComplete) {
+function animateCardFlip(mesh, startRot, targetRot, onComplete) {
     gameState.isAnimating = true;
     const startTime = Date.now();
     const duration = 600;
@@ -259,7 +258,7 @@ function animateCardFlip(cardGroup, startRot, targetRot, onComplete) {
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
         
-        cardGroup.rotation.y = startRot + (targetRot - startRot) * easeInOutCubic(progress);
+        mesh.rotation.y = startRot + (targetRot - startRot) * easeInOutCubic(progress);
         
         if (progress < 1) {
             requestAnimationFrame(animate);
@@ -279,6 +278,8 @@ function easeInOutCubic(t) {
 // Check for match
 function checkMatch() {
     const [card1, card2] = gameState.selectedCards;
+    const mesh1 = cardMeshes.find(m => m.userData === card1);
+    const mesh2 = cardMeshes.find(m => m.userData === card2);
     
     if (card1.emoji === card2.emoji) {
         // Match found
@@ -288,7 +289,7 @@ function checkMatch() {
         updateStats();
         
         // Celebrate matched cards
-        celebrateMatch(card1.parent, card2.parent);
+        celebrateMatch(mesh1, mesh2);
         
         gameState.selectedCards = [];
         
@@ -298,14 +299,11 @@ function checkMatch() {
     } else {
         // No match - flip back
         setTimeout(() => {
-            const card1Mesh = cardMeshes.find(m => m.userData === card1);
-            const card2Mesh = cardMeshes.find(m => m.userData === card2);
-            
-            animateCardFlip(card1Mesh.parent, card1Mesh.parent.rotation.y, 0, () => {
+            animateCardFlip(mesh1, mesh1.rotation.y, 0, () => {
                 card1.flipped = false;
             });
             
-            animateCardFlip(card2Mesh.parent, card2Mesh.parent.rotation.y, 0, () => {
+            animateCardFlip(mesh2, mesh2.rotation.y, 0, () => {
                 card2.flipped = false;
             });
             
@@ -397,58 +395,61 @@ function newGame() {
 
 // Hint functionality
 function showHint() {
-    if (gameState.hintActive || gameState.selectedCards.length > 0) return;
+    if (gameState.hintActive || gameState.selectedCards.length > 0 || gameState.gameOver) return;
     
     gameState.hintActive = true;
     
-    const unflipped = cardMeshes.filter(m => !m.userData.flipped && !m.userData.matched);
-    if (unflipped.length < 2) return;
+    // Find unmatched cards
+    const unmatchedCards = cardMeshes.filter(m => !m.userData.matched);
     
-    const hint1 = unflipped[Math.floor(Math.random() * unflipped.length)];
-    let hint2 = unflipped[Math.floor(Math.random() * unflipped.length)];
-    while (hint2 === hint1) {
-        hint2 = unflipped[Math.floor(Math.random() * unflipped.length)];
+    if (unmatchedCards.length < 2) return;
+    
+    // Pick two random unmatched cards
+    const card1 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
+    let card2 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
+    
+    while (card2 === card1 && unmatchedCards.length > 1) {
+        card2 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
     }
     
-    // Briefly flip hint cards
-    const hintDuration = 1500;
+    // Flip them briefly
+    const originalRot1 = card1.rotation.y;
+    const originalRot2 = card2.rotation.y;
     
-    animateCardFlip(hint1.parent, hint1.parent.rotation.y, hint1.parent.rotation.y + Math.PI, () => {
-        hint1.userData.flipped = true;
+    animateCardFlip(card1, originalRot1, originalRot1 + Math.PI, () => {
+        setTimeout(() => {
+            animateCardFlip(card1, originalRot1 + Math.PI, originalRot1, () => {
+                gameState.hintActive = false;
+            });
+        }, 1000);
     });
     
-    animateCardFlip(hint2.parent, hint2.parent.rotation.y, hint2.parent.rotation.y + Math.PI, () => {
-        hint2.userData.flipped = true;
+    animateCardFlip(card2, originalRot2, originalRot2 + Math.PI, () => {
+        setTimeout(() => {
+            animateCardFlip(card2, originalRot2 + Math.PI, originalRot2, () => {});
+        }, 1000);
     });
-    
-    setTimeout(() => {
-        animateCardFlip(hint1.parent, hint1.parent.rotation.y, 0, () => {
-            hint1.userData.flipped = false;
-        });
-        
-        animateCardFlip(hint2.parent, hint2.parent.rotation.y, 0, () => {
-            hint2.userData.flipped = false;
-            gameState.hintActive = false;
-        });
-    }, hintDuration);
 }
 
 // Animation loop
 function animate() {
-    requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
     
-    // Update card hover effects
+    // Update hover effects
     cardMeshes.forEach(mesh => {
-        if (mesh.userData.isHovered && !mesh.userData.matched) {
-            mesh.parent.position.z += (0.3 - mesh.parent.position.z) * 0.1;
-            mesh.parent.rotation.x += (0.1 - mesh.parent.rotation.x) * 0.1;
+        if (mesh.userData.isHovered && !mesh.userData.flipped && !mesh.userData.matched) {
+            mesh.position.z = 0.3;
+            mesh.scale.lerp(new THREE.Vector3(1.05, 1.05, 1.05), 0.1);
         } else {
-            mesh.parent.position.z += (0 - mesh.parent.position.z) * 0.1;
-            mesh.parent.rotation.x += (0 - mesh.parent.rotation.x) * 0.1;
+            mesh.position.z = 0;
+            mesh.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1);
         }
     });
     
+    // Update timer
     updateTimer();
+    
+    // Render
     renderer.render(scene, camera);
 }
 
@@ -457,21 +458,13 @@ document.getElementById('newGameBtn').addEventListener('click', newGame);
 document.getElementById('hintBtn').addEventListener('click', showHint);
 document.getElementById('playAgainBtn').addEventListener('click', newGame);
 
-// Initialize when DOM is ready
+// Initialize on page load
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOM loaded, initializing game');
-        setTimeout(() => {
-            initThreeJS();
-            newGame();
-            animate();
-        }, 100);
+        setTimeout(initThreeJS, 100);
+        newGame();
     });
 } else {
-    console.log('DOM already loaded, initializing game');
-    setTimeout(() => {
-        initThreeJS();
-        newGame();
-        animate();
-    }, 100);
+    setTimeout(initThreeJS, 100);
+    newGame();
 }
