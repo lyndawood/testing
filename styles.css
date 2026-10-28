@@ -46,8 +46,18 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark mode via data-theme attribute (takes precedence) */
+[data-theme="dark"] {
+  --bg: #111827;
+  --bg-secondary: #1f2937;
+  --text: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --border: #374151;
+}
+
+/* Dark mode via system preference (fallback) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --bg: #111827;
     --bg-secondary: #1f2937;
     --text: #f3f4f6;
