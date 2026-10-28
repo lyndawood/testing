@@ -1,0 +1,9 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "A simple testing example",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
