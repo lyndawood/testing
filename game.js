@@ -147,7 +147,6 @@ class TeaMatchingGame {
 
         this.hintUsed = true;
         this.hintBtn.disabled = true;
-        this.hintBtn.style.opacity = '0.5';
 
         // Find an unmatched card
         const unmatched = [];
