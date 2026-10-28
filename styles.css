@@ -146,14 +146,7 @@ a:hover {
   background-color: var(--bg);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.8);
   transition: var(--transition);
-}
-
-@media (prefers-color-scheme: dark) {
-  .navbar {
-    background-color: rgba(17, 24, 39, 0.8);
-  }
 }
 
 .nav-content {
