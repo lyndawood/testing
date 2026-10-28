@@ -4,12 +4,9 @@ const themeToggle = document.querySelector('.theme-toggle');
 // Check for saved theme preference or default to system preference
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 const savedTheme = localStorage.getItem('theme');
+const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 
-if (savedTheme) {
-  document.documentElement.setAttribute('data-theme', savedTheme);
-} else if (prefersDark) {
-  document.documentElement.setAttribute('data-theme', 'dark');
-}
+document.documentElement.setAttribute('data-theme', initialTheme);
 
 themeToggle.addEventListener('click', () => {
   const currentTheme = document.documentElement.getAttribute('data-theme');

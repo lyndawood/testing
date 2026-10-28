@@ -216,12 +216,22 @@ a:hover {
   display: none;
 }
 
+/* Show moon icon in dark mode */
+[data-theme="dark"] .sun-icon {
+  display: none;
+}
+
+[data-theme="dark"] .moon-icon {
+  display: block;
+}
+
+/* Fallback to system preference if no data-theme is set */
 @media (prefers-color-scheme: dark) {
-  .sun-icon {
+  :root:not([data-theme]) .sun-icon {
     display: none;
   }
   
-  .moon-icon {
+  :root:not([data-theme]) .moon-icon {
     display: block;
   }
 }
