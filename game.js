@@ -32,11 +32,19 @@ function initThreeJS() {
         return;
     }
     
-    // Get dimensions
-    const width = gameArea.clientWidth;
-    const height = gameArea.clientHeight;
+    // Get dimensions - use clientWidth/Height or fallback to window
+    let width = gameArea.clientWidth || window.innerWidth;
+    let height = gameArea.clientHeight || window.innerHeight * 0.6;
+    
+    // Ensure minimum dimensions
+    if (width < 100) width = 400;
+    if (height < 100) height = 400;
     
     console.log('Initializing Three.js with dimensions:', width, height);
+    
+    // Set canvas size attributes
+    canvas.width = width;
+    canvas.height = height;
     
     // Scene
     scene = new THREE.Scene();
@@ -48,7 +56,7 @@ function initThreeJS() {
     
     // Renderer
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setSize(width, height);
+    renderer.setSize(width, height, false);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowShadowMap;
@@ -84,14 +92,20 @@ function onWindowResize() {
     const canvas = document.getElementById('gameCanvas');
     const gameArea = document.querySelector('.game-area');
     
-    if (!gameArea) return;
+    if (!gameArea || !renderer) return;
     
-    const width = gameArea.clientWidth;
-    const height = gameArea.clientHeight;
+    let width = gameArea.clientWidth || window.innerWidth;
+    let height = gameArea.clientHeight || window.innerHeight * 0.6;
+    
+    if (width < 100) width = 400;
+    if (height < 100) height = 400;
+    
+    canvas.width = width;
+    canvas.height = height;
     
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
+    renderer.setSize(width, height, false);
 }
 
 function onCanvasClick(event) {
