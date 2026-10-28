@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Enigma of Numbers</title>
+  <style>
+    :root {
+      /* Dark Academia Palette */
+      --primary: #8b7355;
+      --primary-dark: #6b5344;
+      --secondary: #d4a574;
+      --accent: #c9a961;
+      --success: #9b8b6f;
+      --warning: #a67c52;
+      --danger: #8b5a5a;
+      --bg: #1a1410;
+      --surface: #2d2620;
+      --surface-light: #3d3630;
+      --text: #e8dcc8;
+      --text-muted: #a89968;
+      --border: #4a4238;
+      --gold: #d4a574;
+      --radius: 8px;
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f1ed;
+        --surface: #e8dcc8;
+        --surface-light: #ddd1c4;
+        --text: #2d2620;
+        --text-muted: #6b5344;
+        --border: #c9a961;
+        --gold: #8b7355;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Garamond', serif;
+      background: linear-gradient(135deg, var(--bg) 0%, #0d0a08 50%, var(--surface) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      line-height: 1.8;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 115, 85, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .game-card {
+      background: linear-gradient(135deg, var(--surface) 0%, #3a3228 100%);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: 
+        var(--shadow),
+        inset 0 1px 0 rgba(212, 165, 116, 0.1);
+      animation: slideIn 0.5s ease-out;
+      position: relative;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.05em;
+      font-family: 'Georgia', serif;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-style: italic;
+      letter-spacing: 0.02em;
+    }
+
+    .game-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat {
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      padding: 1.25rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.2), transparent);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      font-family: 'Georgia', serif;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Georgia', serif;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      padding: 0.875rem 1rem;
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
+      border: 2px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 500;
+      font-family: 'Georgia', serif;
+      transition: var(--transition);
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(139, 115, 85, 0.08) 100%);
+    }
+
+    input[type="number"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    button {
+      padding: 0.875rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: 'Georgia', serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(212, 165, 116, 0.2);
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      padding: 1rem;
+      border-radius: calc(var(--radius) - 2px);
+      font-weight: 600;
+      text-align: center;
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-out;
+      font-family: 'Georgia', serif;
+      border: 1px solid;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .feedback.hidden {
+      display: none;
+    }
+
+    .feedback.too-low {
+      background: linear-gradient(135deg, rgba(139, 90, 90, 0.15) 0%, rgba(139, 90, 90, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(139, 90, 90, 0.4);
+    }
+
+    .feedback.too-high {
+      background: linear-gradient(135deg, rgba(166, 124, 82, 0.15) 0%, rgba(166, 124, 82, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(166, 124, 82, 0.4);
+    }
+
+    .feedback.correct {
+      background: linear-gradient(135deg, rgba(155, 139, 111, 0.15) 0%, rgba(155, 139, 111, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(155, 139, 111, 0.4);
+    }
+
+    .feedback.warning {
+      background: linear-gradient(135deg, rgba(166, 124, 82, 0.15) 0%, rgba(166, 124, 82, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(166, 124, 82, 0.4);
+    }
+
+    .guess-history {
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      padding: 1rem;
+      max-height: 150px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .guess-history::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.2), transparent);
+    }
+
+    .guess-history-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      font-family: 'Georgia', serif;
+      font-weight: 600;
+    }
+
+    .guess-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .guess-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: 'Georgia', serif;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(139, 115, 85, 0.1) 100%);
+      color: var(--text);
+      border: 1px solid var(--border);
+      flex: 1;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(139, 115, 85, 0.15) 100%);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-over {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .game-over-emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .game-over-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--gold);
+      font-family: 'Georgia', serif;
+      letter-spacing: 0.02em;
+    }
+
+    .game-over-stats {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      font-family: 'Georgia', serif;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 480px) {
+      .game-card {
+        padding: 1.5rem;
+      }
+
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="game-card">
+      <div class="header">
+        <h1 class="title">📖 The Enigma of Numbers</h1>
+        <p class="subtitle">A scholarly pursuit of hidden knowledge</p>
+      </div>
+
+      <div id="gameContainer" class="game-content">
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-label">Attempts</div>
+            <div class="stat-value" id="attempts">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Best Record</div>
+            <div class="stat-value" id="bestScore">—</div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            id="guessInput"
+            min="1"
+            max="100"
+            placeholder="Enter your conjecture..."
+            aria-label="Enter your guess"
+          />
+          <button id="guessBtn" onclick="makeGuess()">Submit</button>
+        </div>
+
+        <div id="feedback" class="feedback hidden"></div>
+
+        <div id="guessHistoryContainer" class="guess-history" style="display: none;">
+          <div class="guess-history-label">Previous Conjectures</div>
+          <div class="guess-list" id="guessList"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-secondary" onclick="newGame()">New Inquiry</button>
+          <button class="btn-secondary" onclick="showHint()">🔍 Clue</button>
+        </div>
+      </div>
+
+      <div id="gameOverContainer" style="display: none;">
+        <div class="game-over">
+          <div class="game-over-emoji" id="gameOverEmoji">🎉</div>
+          <div class="game-over-text" id="gameOverText">You Won!</div>
+          <div class="game-over-stats" id="gameOverStats"></div>
+          <button onclick="newGame()" style="width: 100%;">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let secretNumber;
+    let attempts = 0;
+    let guesses = [];
+    let gameOver = false;
+    let bestScore = localStorage.getItem('cosmicQuestBestScore') || null;
+
+    function initGame() {
+      secretNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 0;
+      guesses = [];
+      gameOver = false;
+      document.getElementById('gameContainer').style.display = 'flex';
+      document.getElementById('gameOverContainer').style.display = 'none';
+      document.getElementById('guessInput').value = '';
+      document.getElementById('guessInput').focus();
+      document.getElementById('feedback').classList.add('hidden');
+      document.getElementById('guessHistoryContainer').style.display = 'none';
+      updateStats();
+    }
+
+    function makeGuess() {
+      if (gameOver) return;
+
+      const guess = parseInt(document.getElementById('guessInput').value);
+
+      if (isNaN(guess) || guess < 1 || guess > 100) {
+        showFeedback('Please enter a number between 1 and 100', 'warning');
+        return;
+      }
+
+      attempts++;
+      guesses.push(guess);
+      document.getElementById('guessInput').value = '';
+
+      if (guesses.length > 1) {
+        document.getElementById('guessHistoryContainer').style.display = 'block';
+      }
+      updateGuessHistory();
+      updateStats();
+
+      if (guess === secretNumber) {
+        endGame(true);
+      } else if (guess < secretNumber) {
+        showFeedback(`Your conjecture is too low. Seek higher.`, 'too-low');
+      } else {
+        showFeedback(`Your conjecture is too high. Seek lower.`, 'too-high');
+      }
+
+      document.getElementById('guessInput').focus();
+    }
+
+    function showFeedback(message, type) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = message;
+      feedback.className = `feedback ${type}`;
+    }
+
+    function updateStats() {
+      document.getElementById('attempts').textContent = attempts;
+      document.getElementById('bestScore').textContent = bestScore || '—';
+    }
+
+    function updateGuessHistory() {
+      const guessList = document.getElementById('guessList');
+      guessList.innerHTML = guesses
+        .map(g => `<div class="guess-badge">${g}</div>`)
+        .join('');
+    }
+
+    function showHint() {
+      if (gameOver) return;
+
+      const low = guesses.filter(g => g < secretNumber).sort((a, b) => b - a)[0];
+      const high = guesses.filter(g => g > secretNumber).sort((a, b) => a - b)[0];
+
+      let hint = '';
+      if (low && high) {
+        hint = `The answer lies between ${low} and ${high}`;
+      } else if (low) {
+        hint = `The answer is greater than ${low}`;
+      } else if (high) {
+        hint = `The answer is less than ${high}`;
+      } else {
+        const range = Math.floor(secretNumber / 2);
+        hint = `Consider the range of ${range} to ${secretNumber + range}`;
+      }
+
+      showFeedback(`🔍 Clue: ${hint}`, 'warning');
+    }
+
+    function endGame(won) {
+      gameOver = true;
+      document.getElementById('gameContainer').style.display = 'none';
+      document.getElementById('gameOverContainer').style.display = 'block';
+
+      if (won) {
+        document.getElementById('gameOverEmoji').textContent = '✨';
+        document.getElementById('gameOverText').textContent = 'Eureka!';
+        document.getElementById('gameOverStats').innerHTML = `
+          <p>You have discovered the number <strong>${secretNumber}</strong> in <strong>${attempts}</strong> attempt${attempts !== 1 ? 's' : ''}.</p>
+        `;
+
+        if (!bestScore || attempts < bestScore) {
+          bestScore = attempts;
+          localStorage.setItem('cosmicQuestBestScore', bestScore);
+          document.getElementById('gameOverStats').innerHTML += `<p style="color: var(--gold); margin-top: 0.75rem;">🏆 A new record!</p>`;
+        }
+      }
+    }
+
+    function newGame() {
+      initGame();
+    }
+
+    // Allow Enter key to submit guess
+    document.getElementById('guessInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        makeGuess();
+      }
+    });
+
+    // Initialize game on load
+    initGame();
+  </script>
+</body>
+</html>
