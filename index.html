@@ -3,34 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cosmic Number Quest</title>
+  <title>The Enigma of Numbers</title>
   <style>
     :root {
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      --secondary: #ec4899;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-light: #334155;
-      --text: #f1f5f9;
-      --text-muted: #cbd5e1;
-      --border: #475569;
-      --radius: 12px;
-      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      /* Dark Academia Palette */
+      --primary: #8b7355;
+      --primary-dark: #6b5344;
+      --secondary: #d4a574;
+      --accent: #c9a961;
+      --success: #9b8b6f;
+      --warning: #a67c52;
+      --danger: #8b5a5a;
+      --bg: #1a1410;
+      --surface: #2d2620;
+      --surface-light: #3d3630;
+      --text: #e8dcc8;
+      --text-muted: #a89968;
+      --border: #4a4238;
+      --gold: #d4a574;
+      --radius: 8px;
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @media (prefers-color-scheme: light) {
       :root {
-        --bg: #f8fafc;
-        --surface: #e2e8f0;
-        --surface-light: #cbd5e1;
-        --text: #0f172a;
-        --text-muted: #64748b;
-        --border: #cbd5e1;
+        --bg: #f5f1ed;
+        --surface: #e8dcc8;
+        --surface-light: #ddd1c4;
+        --text: #2d2620;
+        --text-muted: #6b5344;
+        --border: #c9a961;
+        --gold: #8b7355;
       }
     }
 
@@ -41,29 +45,61 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+      font-family: 'Georgia', 'Garamond', serif;
+      background: linear-gradient(135deg, var(--bg) 0%, #0d0a08 50%, var(--surface) 100%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      line-height: 1.6;
+      line-height: 1.8;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 115, 85, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .container {
       width: 100%;
       max-width: 500px;
+      position: relative;
+      z-index: 1;
     }
 
     .game-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--surface) 0%, #3a3228 100%);
+      border: 2px solid var(--border);
       border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow);
+      padding: 2.5rem;
+      box-shadow: 
+        var(--shadow),
+        inset 0 1px 0 rgba(212, 165, 116, 0.1);
       animation: slideIn 0.5s ease-out;
+      position: relative;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
+      border-radius: var(--radius) var(--radius) 0 0;
     }
 
     @keyframes slideIn {
@@ -86,15 +122,17 @@
       font-size: clamp(1.75rem, 5vw, 2.5rem);
       font-weight: 700;
       margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--gold);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.05em;
+      font-family: 'Georgia', serif;
     }
 
     .subtitle {
       color: var(--text-muted);
       font-size: 0.95rem;
+      font-style: italic;
+      letter-spacing: 0.02em;
     }
 
     .game-content {
@@ -110,25 +148,40 @@
     }
 
     .stat {
-      background: var(--surface-light);
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
       border: 1px solid var(--border);
-      border-radius: calc(var(--radius) - 4px);
-      padding: 1rem;
+      border-radius: calc(var(--radius) - 2px);
+      padding: 1.25rem;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.2), transparent);
     }
 
     .stat-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      font-family: 'Georgia', serif;
+      font-weight: 600;
     }
 
     .stat-value {
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--gold);
+      font-family: 'Georgia', serif;
     }
 
     .input-group {
@@ -139,19 +192,21 @@
     input[type="number"] {
       flex: 1;
       padding: 0.875rem 1rem;
-      background: var(--surface-light);
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
       border: 2px solid var(--border);
-      border-radius: calc(var(--radius) - 4px);
+      border-radius: calc(var(--radius) - 2px);
       color: var(--text);
       font-size: 1rem;
       font-weight: 500;
+      font-family: 'Georgia', serif;
       transition: var(--transition);
     }
 
     input[type="number"]:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(139, 115, 85, 0.08) 100%);
     }
 
     input[type="number"]::placeholder {
@@ -161,20 +216,36 @@
     button {
       padding: 0.875rem 1.5rem;
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      border: none;
-      border-radius: calc(var(--radius) - 4px);
-      font-size: 1rem;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: var(--transition);
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      font-family: 'Georgia', serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
     }
 
     button:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+      box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(212, 165, 116, 0.2);
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
     }
 
     button:active:not(:disabled) {
@@ -188,7 +259,7 @@
 
     .feedback {
       padding: 1rem;
-      border-radius: calc(var(--radius) - 4px);
+      border-radius: calc(var(--radius) - 2px);
       font-weight: 600;
       text-align: center;
       min-height: 2.5rem;
@@ -196,6 +267,8 @@
       align-items: center;
       justify-content: center;
       animation: fadeIn 0.3s ease-out;
+      font-family: 'Georgia', serif;
+      border: 1px solid;
     }
 
     @keyframes fadeIn {
@@ -212,38 +285,57 @@
     }
 
     .feedback.too-low {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: linear-gradient(135deg, rgba(139, 90, 90, 0.15) 0%, rgba(139, 90, 90, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(139, 90, 90, 0.4);
     }
 
     .feedback.too-high {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: linear-gradient(135deg, rgba(166, 124, 82, 0.15) 0%, rgba(166, 124, 82, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(166, 124, 82, 0.4);
     }
 
     .feedback.correct {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: linear-gradient(135deg, rgba(155, 139, 111, 0.15) 0%, rgba(155, 139, 111, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(155, 139, 111, 0.4);
+    }
+
+    .feedback.warning {
+      background: linear-gradient(135deg, rgba(166, 124, 82, 0.15) 0%, rgba(166, 124, 82, 0.08) 100%);
+      color: #d4a574;
+      border-color: rgba(166, 124, 82, 0.4);
     }
 
     .guess-history {
-      background: var(--surface-light);
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(139, 115, 85, 0.05) 100%);
       border: 1px solid var(--border);
-      border-radius: calc(var(--radius) - 4px);
+      border-radius: calc(var(--radius) - 2px);
       padding: 1rem;
       max-height: 150px;
       overflow-y: auto;
+      position: relative;
+    }
+
+    .guess-history::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.2), transparent);
     }
 
     .guess-history-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       margin-bottom: 0.75rem;
+      font-family: 'Georgia', serif;
+      font-weight: 600;
     }
 
     .guess-list {
@@ -258,11 +350,13 @@
       justify-content: center;
       min-width: 2.5rem;
       height: 2.5rem;
-      background: var(--primary);
-      color: white;
-      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
       font-size: 0.875rem;
       font-weight: 600;
+      font-family: 'Georgia', serif;
     }
 
     .actions {
@@ -271,15 +365,15 @@
     }
 
     .btn-secondary {
-      background: var(--surface-light);
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(139, 115, 85, 0.1) 100%);
       color: var(--text);
       border: 1px solid var(--border);
       flex: 1;
     }
 
     .btn-secondary:hover:not(:disabled) {
-      background: var(--border);
-      box-shadow: none;
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(139, 115, 85, 0.15) 100%);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
     .game-over {
@@ -303,15 +397,20 @@
     }
 
     .game-over-text {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--gold);
+      font-family: 'Georgia', serif;
+      letter-spacing: 0.02em;
     }
 
     .game-over-stats {
       color: var(--text-muted);
       margin-bottom: 1.5rem;
       font-size: 0.95rem;
+      font-family: 'Georgia', serif;
+      line-height: 1.8;
     }
 
     @media (max-width: 480px) {
@@ -345,8 +444,8 @@
   <div class="container">
     <div class="game-card">
       <div class="header">
-        <h1 class="title">🚀 Cosmic Quest</h1>
-        <p class="subtitle">Guess the secret number between 1 and 100</p>
+        <h1 class="title">📖 The Enigma of Numbers</h1>
+        <p class="subtitle">A scholarly pursuit of hidden knowledge</p>
       </div>
 
       <div id="gameContainer" class="game-content">
@@ -356,7 +455,7 @@
             <div class="stat-value" id="attempts">0</div>
           </div>
           <div class="stat">
-            <div class="stat-label">Best Score</div>
+            <div class="stat-label">Best Record</div>
             <div class="stat-value" id="bestScore">—</div>
           </div>
         </div>
@@ -367,22 +466,22 @@
             id="guessInput"
             min="1"
             max="100"
-            placeholder="Enter your guess..."
+            placeholder="Enter your conjecture..."
             aria-label="Enter your guess"
           />
-          <button id="guessBtn" onclick="makeGuess()">Guess</button>
+          <button id="guessBtn" onclick="makeGuess()">Submit</button>
         </div>
 
         <div id="feedback" class="feedback hidden"></div>
 
         <div id="guessHistoryContainer" class="guess-history" style="display: none;">
-          <div class="guess-history-label">Your Guesses</div>
+          <div class="guess-history-label">Previous Conjectures</div>
           <div class="guess-list" id="guessList"></div>
         </div>
 
         <div class="actions">
-          <button class="btn-secondary" onclick="newGame()">New Game</button>
-          <button class="btn-secondary" onclick="showHint()">💡 Hint</button>
+          <button class="btn-secondary" onclick="newGame()">New Inquiry</button>
+          <button class="btn-secondary" onclick="showHint()">🔍 Clue</button>
         </div>
       </div>
 
@@ -441,9 +540,9 @@
       if (guess === secretNumber) {
         endGame(true);
       } else if (guess < secretNumber) {
-        showFeedback(`📈 Too low! The number is higher.`, 'too-low');
+        showFeedback(`Your conjecture is too low. Seek higher.`, 'too-low');
       } else {
-        showFeedback(`📉 Too high! The number is lower.`, 'too-high');
+        showFeedback(`Your conjecture is too high. Seek lower.`, 'too-high');
       }
 
       document.getElementById('guessInput').focus();
@@ -475,17 +574,17 @@
 
       let hint = '';
       if (low && high) {
-        hint = `The number is between ${low} and ${high}`;
+        hint = `The answer lies between ${low} and ${high}`;
       } else if (low) {
-        hint = `The number is higher than ${low}`;
+        hint = `The answer is greater than ${low}`;
       } else if (high) {
-        hint = `The number is lower than ${high}`;
+        hint = `The answer is less than ${high}`;
       } else {
         const range = Math.floor(secretNumber / 2);
-        hint = `Try a number around ${range}-${secretNumber + range}`;
+        hint = `Consider the range of ${range} to ${secretNumber + range}`;
       }
 
-      showFeedback(`💡 Hint: ${hint}`, 'warning');
+      showFeedback(`🔍 Clue: ${hint}`, 'warning');
     }
 
     function endGame(won) {
@@ -494,16 +593,16 @@
       document.getElementById('gameOverContainer').style.display = 'block';
 
       if (won) {
-        document.getElementById('gameOverEmoji').textContent = '🎉';
-        document.getElementById('gameOverText').textContent = 'You Won!';
+        document.getElementById('gameOverEmoji').textContent = '✨';
+        document.getElementById('gameOverText').textContent = 'Eureka!';
         document.getElementById('gameOverStats').innerHTML = `
-          <p>You found the number <strong>${secretNumber}</strong> in <strong>${attempts}</strong> attempt${attempts !== 1 ? 's' : ''}!</p>
+          <p>You have discovered the number <strong>${secretNumber}</strong> in <strong>${attempts}</strong> attempt${attempts !== 1 ? 's' : ''}.</p>
         `;
 
         if (!bestScore || attempts < bestScore) {
           bestScore = attempts;
           localStorage.setItem('cosmicQuestBestScore', bestScore);
-          document.getElementById('gameOverStats').innerHTML += `<p style="color: var(--success); margin-top: 0.5rem;">🏆 New best score!</p>`;
+          document.getElementById('gameOverStats').innerHTML += `<p style="color: var(--gold); margin-top: 0.75rem;">🏆 A new record!</p>`;
         }
       }
     }
