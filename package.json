@@ -1,0 +1,19 @@
+{
+  "name": "tea-matching-game",
+  "version": "1.0.0",
+  "description": "A tea-themed matching card game",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "test": "echo \"No tests configured\""
+  },
+  "keywords": [
+    "game",
+    "matching",
+    "cards",
+    "tea",
+    "puzzle"
+  ],
+  "author": "",
+  "license": "MIT"
+}
