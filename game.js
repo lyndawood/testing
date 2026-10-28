@@ -65,8 +65,29 @@ class MatchingGame {
       cardEl.setAttribute('aria-label', `Card ${card.id + 1}`);
       cardEl.addEventListener('click', () => this.flipCard(card.id));
 
+      // Add 3D mouse tracking effect
+      cardEl.addEventListener('mousemove', (e) => this.handleCardMouseMove(e, cardEl));
+      cardEl.addEventListener('mouseleave', () => this.handleCardMouseLeave(cardEl));
+
       this.gameBoard.appendChild(cardEl);
     });
+  }
+
+  handleCardMouseMove(e, cardEl) {
+    if (cardEl.classList.contains('matched') || cardEl.classList.contains('flipped')) return;
+
+    const rect = cardEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const rotateX = (e.clientY - centerY) / 10;
+    const rotateY = (centerX - e.clientX) / 10;
+
+    cardEl.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+  }
+
+  handleCardMouseLeave(cardEl) {
+    cardEl.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
   }
 
   flipCard(id) {

@@ -188,10 +188,6 @@ h1 {
   box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.card:active:not(.matched):not(.flipped) {
-  transform: perspective(1000px) rotateY(-3deg) rotateX(2deg) scale(1.04);
-}
-
 .card:focus-visible {
   outline: 3px solid var(--secondary);
   outline-offset: 2px;
