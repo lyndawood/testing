@@ -30,4 +30,15 @@ To contribute code changes, follow these steps:
 
 7. **Review and merge** - A maintainer will review your pull request. Be prepared to make adjustments if requested.
 
+## Code of Conduct
+
+We are committed to providing a welcoming and inclusive environment for all contributors. We expect all participants to:
+
+- Be respectful and inclusive of different perspectives and experiences
+- Refrain from harassment, discrimination, or any form of abusive behavior
+- Communicate constructively and professionally
+- Report any violations of this code of conduct to the maintainers
+
+We believe that a positive and respectful community makes for better collaboration and innovation. Thank you for helping us maintain a welcoming environment for everyone.
+
 Thank you for contributing!
