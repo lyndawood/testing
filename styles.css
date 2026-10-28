@@ -90,17 +90,17 @@ main {
     font-size: 3em;
     transition: all 0.3s ease;
     position: relative;
-    transform-style: preserve-3d;
     user-select: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 
-.card:hover:not(.matched):not(.flipped) {
+.card:hover:not(.matched):not(.revealed) {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.card.flipped {
+.card.revealed {
     background: linear-gradient(135deg, #f5deb3 0%, #ffe4b5 100%);
     border-color: #d4a574;
 }
@@ -126,17 +126,19 @@ main {
     }
 }
 
-@keyframes flip {
+@keyframes revealZoom {
     0% {
-        transform: rotateY(0deg);
+        transform: scale(0.3);
+        opacity: 0;
     }
     100% {
-        transform: rotateY(180deg);
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
-.card.flipping {
-    animation: flip 0.6s ease-in-out;
+.card.revealing {
+    animation: revealZoom 0.4s ease-out;
 }
 
 footer {

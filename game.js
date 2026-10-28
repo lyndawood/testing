@@ -21,7 +21,7 @@ const teaCards = [
 class TeaMatchingGame {
     constructor() {
         this.cards = [];
-        this.flipped = [];
+        this.revealed = [];
         this.matched = [];
         this.moves = 0;
         this.matches = 0;
@@ -46,7 +46,7 @@ class TeaMatchingGame {
 
     init() {
         this.cards = this.shuffleCards([...teaCards]);
-        this.flipped = [];
+        this.revealed = [];
         this.matched = [];
         this.moves = 0;
         this.matches = 0;
@@ -78,8 +78,8 @@ class TeaMatchingGame {
             if (this.matched.includes(index)) {
                 cardElement.classList.add('matched');
             }
-            if (this.flipped.includes(index)) {
-                cardElement.classList.add('flipped');
+            if (this.revealed.includes(index)) {
+                cardElement.classList.add('revealed');
                 cardElement.textContent = card.emoji;
             }
 
@@ -90,15 +90,15 @@ class TeaMatchingGame {
 
     flipCard(index, element) {
         if (!this.gameActive) return;
-        if (this.flipped.includes(index)) return;
+        if (this.revealed.includes(index)) return;
         if (this.matched.includes(index)) return;
-        if (this.flipped.length >= 2) return;
+        if (this.revealed.length >= 2) return;
 
-        this.flipped.push(index);
-        element.classList.add('flipped', 'flipping');
+        this.revealed.push(index);
+        element.classList.add('revealed', 'revealing');
         element.textContent = this.cards[index].emoji;
 
-        if (this.flipped.length === 2) {
+        if (this.revealed.length === 2) {
             this.moves++;
             this.updateDisplay();
             this.checkMatch();
@@ -106,7 +106,7 @@ class TeaMatchingGame {
     }
 
     checkMatch() {
-        const [first, second] = this.flipped;
+        const [first, second] = this.revealed;
         const isMatch = this.cards[first].name === this.cards[second].name;
 
         this.gameActive = false;
@@ -121,7 +121,7 @@ class TeaMatchingGame {
                 elements[first].classList.add('matched');
                 elements[second].classList.add('matched');
 
-                this.flipped = [];
+                this.revealed = [];
                 this.gameActive = true;
 
                 if (this.matched.length === this.cards.length) {
@@ -129,19 +129,19 @@ class TeaMatchingGame {
                 }
             } else {
                 const elements = document.querySelectorAll('.card');
-                elements[first].classList.remove('flipped', 'flipping');
-                elements[second].classList.remove('flipped', 'flipping');
+                elements[first].classList.remove('revealed', 'revealing');
+                elements[second].classList.remove('revealed', 'revealing');
                 elements[first].textContent = '';
                 elements[second].textContent = '';
 
-                this.flipped = [];
+                this.revealed = [];
                 this.gameActive = true;
             }
         }, 1000);
     }
 
     showHint() {
-        if (this.hintUsed || this.flipped.length > 0 || this.matched.length === this.cards.length) {
+        if (this.hintUsed || this.revealed.length > 0 || this.matched.length === this.cards.length) {
             return;
         }
 
@@ -161,11 +161,11 @@ class TeaMatchingGame {
             const randomIndex = unmatched[Math.floor(Math.random() * unmatched.length)];
             const element = document.querySelector(`[data-index="${randomIndex}"]`);
 
-            element.classList.add('flipped');
+            element.classList.add('revealed', 'revealing');
             element.textContent = this.cards[randomIndex].emoji;
 
             setTimeout(() => {
-                element.classList.remove('flipped');
+                element.classList.remove('revealed', 'revealing');
                 element.textContent = '';
             }, 1500);
         }
