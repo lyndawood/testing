@@ -1,221 +1,442 @@
-class MatchingGame {
-  constructor() {
-    this.emojis = ['🎨', '🎭', '🎪', '🎬', '🎤', '🎧', '🎸', '🎹'];
-    this.cards = [];
-    this.flipped = [];
-    this.matched = [];
-    this.moves = 0;
-    this.matchCount = 0;
-    this.gameActive = true;
-    this.startTime = null;
-    this.timerInterval = null;
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@r128/build/three.module.js';
 
-    this.gameBoard = document.getElementById('gameBoard');
-    this.movesDisplay = document.getElementById('moves');
-    this.matchesDisplay = document.getElementById('matches');
-    this.timerDisplay = document.getElementById('timer');
-    this.resetBtn = document.getElementById('resetBtn');
-    this.hintBtn = document.getElementById('hintBtn');
-    this.winModal = document.getElementById('winModal');
-    this.playAgainBtn = document.getElementById('playAgainBtn');
-    this.winStats = document.getElementById('winStats');
+// Game state
+const gameState = {
+    cards: [],
+    selectedCards: [],
+    matchedPairs: 0,
+    moves: 0,
+    startTime: null,
+    isAnimating: false,
+    gameOver: false,
+    hintActive: false,
+};
 
-    this.resetBtn.addEventListener('click', () => this.reset());
-    this.hintBtn.addEventListener('click', () => this.showHint());
-    this.playAgainBtn.addEventListener('click', () => this.reset());
+// Emoji pairs for the game
+const emojis = ['🎮', '🎨', '🎭', '🎪', '🎯', '🎲', '🎸', '🎺'];
 
-    this.init();
-  }
+// Three.js setup
+let scene, camera, renderer;
+let cardMeshes = [];
+let raycaster = new THREE.Raycaster();
+let mouse = new THREE.Vector2();
 
-  init() {
-    this.createCards();
-    this.render();
-    this.startTimer();
-  }
+// Initialize Three.js
+function initThreeJS() {
+    const canvas = document.getElementById('gameCanvas');
+    
+    // Scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0f172a);
+    
+    // Camera
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    camera.position.z = 8;
+    
+    // Renderer
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(5, 5, 5);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
+    scene.add(directionalLight);
+    
+    const pointLight = new THREE.PointLight(0x6366f1, 0.5);
+    pointLight.position.set(-5, 5, 5);
+    scene.add(pointLight);
+    
+    // Handle window resize
+    window.addEventListener('resize', onWindowResize);
+    
+    // Mouse events
+    canvas.addEventListener('click', onCanvasClick);
+    canvas.addEventListener('mousemove', onCanvasMouseMove);
+}
 
-  createCards() {
-    // Create pairs of cards
-    const cardPairs = [...this.emojis, ...this.emojis];
-    this.cards = cardPairs
-      .sort(() => Math.random() - 0.5)
-      .map((emoji, index) => ({
-        id: index,
+function onWindowResize() {
+    const canvas = document.getElementById('gameCanvas');
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+}
+
+function onCanvasClick(event) {
+    if (gameState.isAnimating || gameState.gameOver) return;
+    
+    const canvas = document.getElementById('gameCanvas');
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(cardMeshes);
+    
+    if (intersects.length > 0) {
+        const clickedMesh = intersects[0].object;
+        const card = clickedMesh.userData;
+        
+        if (!card.flipped && !card.matched && !gameState.selectedCards.includes(card)) {
+            flipCard(card);
+        }
+    }
+}
+
+function onCanvasMouseMove(event) {
+    const canvas = document.getElementById('gameCanvas');
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(cardMeshes);
+    
+    cardMeshes.forEach(mesh => {
+        const isHovered = intersects.some(i => i.object === mesh);
+        mesh.userData.isHovered = isHovered;
+    });
+}
+
+// Create 3D card
+function createCard(emoji, index) {
+    const group = new THREE.Group();
+    
+    // Card geometry
+    const geometry = new THREE.BoxGeometry(1.5, 2, 0.1);
+    
+    // Front face (with emoji)
+    const frontCanvas = document.createElement('canvas');
+    frontCanvas.width = 256;
+    frontCanvas.height = 256;
+    const frontCtx = frontCanvas.getContext('2d');
+    frontCtx.fillStyle = '#6366f1';
+    frontCtx.fillRect(0, 0, 256, 256);
+    frontCtx.fillStyle = '#ffffff';
+    frontCtx.font = 'bold 120px Arial';
+    frontCtx.textAlign = 'center';
+    frontCtx.textBaseline = 'middle';
+    frontCtx.fillText(emoji, 128, 128);
+    
+    const frontTexture = new THREE.CanvasTexture(frontCanvas);
+    const frontMaterial = new THREE.MeshStandardMaterial({ map: frontTexture });
+    
+    // Back face (card back)
+    const backCanvas = document.createElement('canvas');
+    backCanvas.width = 256;
+    backCanvas.height = 256;
+    const backCtx = backCanvas.getContext('2d');
+    backCtx.fillStyle = '#ec4899';
+    backCtx.fillRect(0, 0, 256, 256);
+    backCtx.fillStyle = '#ffffff';
+    backCtx.font = 'bold 80px Arial';
+    backCtx.textAlign = 'center';
+    backCtx.textBaseline = 'middle';
+    backCtx.fillText('?', 128, 128);
+    
+    const backTexture = new THREE.CanvasTexture(backCanvas);
+    const backMaterial = new THREE.MeshStandardMaterial({ map: backTexture });
+    
+    // Create materials array for each face
+    const materials = [
+        backMaterial, // right
+        backMaterial, // left
+        backMaterial, // top
+        backMaterial, // bottom
+        backMaterial, // front (will be rotated)
+        frontMaterial, // back (will be rotated)
+    ];
+    
+    const mesh = new THREE.Mesh(geometry, materials);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    
+    // Store card data
+    mesh.userData = {
         emoji: emoji,
         flipped: false,
         matched: false,
-      }));
-  }
-
-  render() {
-    this.gameBoard.innerHTML = '';
-    this.cards.forEach((card) => {
-      const cardEl = document.createElement('button');
-      cardEl.className = 'card';
-      if (card.flipped || card.matched) {
-        cardEl.classList.add('flipped');
-      }
-      if (card.matched) {
-        cardEl.classList.add('matched');
-      }
-      if (!this.gameActive) {
-        cardEl.classList.add('disabled');
-      }
-
-      cardEl.textContent = card.flipped || card.matched ? card.emoji : '?';
-      cardEl.setAttribute('aria-label', `Card ${card.id + 1}`);
-      cardEl.addEventListener('click', () => this.flipCard(card.id));
-
-      // Add 3D mouse tracking effect
-      cardEl.addEventListener('mousemove', (e) => this.handleCardMouseMove(e, cardEl));
-      cardEl.addEventListener('mouseleave', () => this.handleCardMouseLeave(cardEl));
-
-      this.gameBoard.appendChild(cardEl);
-    });
-  }
-
-  handleCardMouseMove(e, cardEl) {
-    if (cardEl.classList.contains('matched') || cardEl.classList.contains('flipped')) return;
-
-    const rect = cardEl.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const rotateX = (e.clientY - centerY) / 10;
-    const rotateY = (centerX - e.clientX) / 10;
-
-    cardEl.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-  }
-
-  handleCardMouseLeave(cardEl) {
-    cardEl.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-  }
-
-  flipCard(id) {
-    if (!this.gameActive) return;
-    if (this.flipped.length >= 2) return;
-
-    const card = this.cards[id];
-    if (card.flipped || card.matched) return;
-
-    card.flipped = true;
-    this.flipped.push(id);
-    this.render();
-
-    if (this.flipped.length === 2) {
-      this.moves++;
-      this.movesDisplay.textContent = this.moves;
-      this.checkMatch();
-    }
-  }
-
-  checkMatch() {
-    const [id1, id2] = this.flipped;
-    const card1 = this.cards[id1];
-    const card2 = this.cards[id2];
-
-    if (card1.emoji === card2.emoji) {
-      // Match found
-      card1.matched = true;
-      card2.matched = true;
-      this.matched.push(id1, id2);
-      this.matchCount++;
-      this.matchesDisplay.textContent = this.matchCount;
-      this.flipped = [];
-      this.render();
-
-      if (this.matchCount === this.emojis.length) {
-        this.win();
-      }
-    } else {
-      // No match
-      this.gameActive = false;
-      setTimeout(() => {
-        card1.flipped = false;
-        card2.flipped = false;
-        this.flipped = [];
-        this.gameActive = true;
-        this.render();
-      }, 1000);
-    }
-  }
-
-  showHint() {
-    if (!this.gameActive || this.flipped.length > 0) return;
-
-    // Find an unmatched card
-    const unmatchedCards = this.cards.filter((c) => !c.matched);
-    if (unmatchedCards.length < 2) return;
-
-    // Flip two random unmatched cards briefly
-    const hint1 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
-    let hint2 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
-    while (hint2.id === hint1.id) {
-      hint2 = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
-    }
-
-    hint1.flipped = true;
-    hint2.flipped = true;
-    this.render();
-
-    setTimeout(() => {
-      hint1.flipped = false;
-      hint2.flipped = false;
-      this.render();
-    }, 1500);
-  }
-
-  startTimer() {
-    this.startTime = Date.now();
-    this.timerInterval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
-      this.timerDisplay.textContent = `${elapsed}s`;
-    }, 100);
-  }
-
-  stopTimer() {
-    clearInterval(this.timerInterval);
-  }
-
-  win() {
-    this.gameActive = false;
-    this.stopTimer();
-
-    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
-    const minutes = Math.floor(elapsed / 60);
-    const seconds = elapsed % 60;
-    const timeStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
-
-    this.winStats.innerHTML = `
-      <strong>Congratulations!</strong><br>
-      Moves: ${this.moves}<br>
-      Time: ${timeStr}
-    `;
-
-    setTimeout(() => {
-      this.winModal.classList.add('show');
-    }, 500);
-  }
-
-  reset() {
-    this.flipped = [];
-    this.matched = [];
-    this.moves = 0;
-    this.matchCount = 0;
-    this.gameActive = true;
-    this.stopTimer();
-    this.winModal.classList.remove('show');
-
-    this.movesDisplay.textContent = '0';
-    this.matchesDisplay.textContent = '0';
-    this.timerDisplay.textContent = '0s';
-
-    this.createCards();
-    this.render();
-    this.startTimer();
-  }
+        isHovered: false,
+        rotationY: 0,
+        targetRotationY: 0,
+        index: index,
+    };
+    
+    group.add(mesh);
+    return group;
 }
 
-// Initialize game when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  new MatchingGame();
-});
+// Create game board
+function createGameBoard() {
+    // Clear existing cards
+    cardMeshes.forEach(mesh => scene.remove(mesh.parent));
+    cardMeshes = [];
+    gameState.cards = [];
+    
+    // Create shuffled emoji array
+    const shuffledEmojis = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+    
+    // Create cards in a grid
+    const cols = 4;
+    const rows = 4;
+    const spacing = 2;
+    const startX = -(cols - 1) * spacing / 2;
+    const startY = (rows - 1) * spacing / 2;
+    
+    shuffledEmojis.forEach((emoji, index) => {
+        const col = index % cols;
+        const row = Math.floor(index / cols);
+        
+        const card = createCard(emoji, index);
+        card.position.x = startX + col * spacing;
+        card.position.y = startY - row * spacing;
+        card.position.z = 0;
+        
+        scene.add(card);
+        cardMeshes.push(card.children[0]);
+        gameState.cards.push(card.children[0].userData);
+    });
+}
+
+// Flip card animation
+function flipCard(card) {
+    gameState.selectedCards.push(card);
+    gameState.moves++;
+    updateStats();
+    
+    // Animate flip
+    const startRotation = card.parent.rotation.y;
+    const targetRotation = startRotation + Math.PI;
+    
+    animateCardFlip(card.parent, startRotation, targetRotation, () => {
+        card.flipped = true;
+        
+        if (gameState.selectedCards.length === 2) {
+            checkMatch();
+        }
+    });
+}
+
+function animateCardFlip(cardGroup, startRot, targetRot, onComplete) {
+    gameState.isAnimating = true;
+    const startTime = Date.now();
+    const duration = 600;
+    
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        cardGroup.rotation.y = startRot + (targetRot - startRot) * easeInOutCubic(progress);
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            gameState.isAnimating = false;
+            onComplete();
+        }
+    }
+    
+    animate();
+}
+
+function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+// Check for match
+function checkMatch() {
+    const [card1, card2] = gameState.selectedCards;
+    
+    if (card1.emoji === card2.emoji) {
+        // Match found
+        card1.matched = true;
+        card2.matched = true;
+        gameState.matchedPairs++;
+        updateStats();
+        
+        // Celebrate matched cards
+        celebrateMatch(card1.parent, card2.parent);
+        
+        gameState.selectedCards = [];
+        
+        if (gameState.matchedPairs === 8) {
+            endGame();
+        }
+    } else {
+        // No match - flip back
+        setTimeout(() => {
+            const card1Mesh = cardMeshes.find(m => m.userData === card1);
+            const card2Mesh = cardMeshes.find(m => m.userData === card2);
+            
+            animateCardFlip(card1Mesh.parent, card1Mesh.parent.rotation.y, 0, () => {
+                card1.flipped = false;
+            });
+            
+            animateCardFlip(card2Mesh.parent, card2Mesh.parent.rotation.y, 0, () => {
+                card2.flipped = false;
+            });
+            
+            gameState.selectedCards = [];
+        }, 1000);
+    }
+}
+
+function celebrateMatch(mesh1, mesh2) {
+    // Pulse and rotate animation
+    const startTime = Date.now();
+    const duration = 600;
+    
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const scale = 1 + Math.sin(progress * Math.PI * 2) * 0.1;
+        mesh1.scale.set(scale, scale, scale);
+        mesh2.scale.set(scale, scale, scale);
+        
+        mesh1.rotation.z = Math.sin(progress * Math.PI * 4) * 0.1;
+        mesh2.rotation.z = Math.sin(progress * Math.PI * 4) * 0.1;
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            mesh1.scale.set(1, 1, 1);
+            mesh2.scale.set(1, 1, 1);
+            mesh1.rotation.z = 0;
+            mesh2.rotation.z = 0;
+        }
+    }
+    
+    animate();
+}
+
+// Update stats display
+function updateStats() {
+    document.getElementById('moves').textContent = gameState.moves;
+    document.getElementById('matches').textContent = `${gameState.matchedPairs}/8`;
+}
+
+// Update timer
+function updateTimer() {
+    if (!gameState.startTime || gameState.gameOver) return;
+    
+    const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    
+    document.getElementById('timer').textContent = 
+        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+// End game
+function endGame() {
+    gameState.gameOver = true;
+    
+    const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    document.getElementById('finalMoves').textContent = gameState.moves;
+    document.getElementById('finalTime').textContent = timeStr;
+    
+    setTimeout(() => {
+        document.getElementById('winModal').classList.remove('hidden');
+    }, 500);
+}
+
+// New game
+function newGame() {
+    gameState.cards = [];
+    gameState.selectedCards = [];
+    gameState.matchedPairs = 0;
+    gameState.moves = 0;
+    gameState.startTime = Date.now();
+    gameState.isAnimating = false;
+    gameState.gameOver = false;
+    gameState.hintActive = false;
+    
+    document.getElementById('winModal').classList.add('hidden');
+    
+    createGameBoard();
+    updateStats();
+}
+
+// Hint functionality
+function showHint() {
+    if (gameState.hintActive || gameState.selectedCards.length > 0) return;
+    
+    gameState.hintActive = true;
+    
+    const unflipped = cardMeshes.filter(m => !m.userData.flipped && !m.userData.matched);
+    if (unflipped.length < 2) return;
+    
+    const hint1 = unflipped[Math.floor(Math.random() * unflipped.length)];
+    let hint2 = unflipped[Math.floor(Math.random() * unflipped.length)];
+    while (hint2 === hint1) {
+        hint2 = unflipped[Math.floor(Math.random() * unflipped.length)];
+    }
+    
+    // Briefly flip hint cards
+    const hintDuration = 1500;
+    
+    animateCardFlip(hint1.parent, hint1.parent.rotation.y, hint1.parent.rotation.y + Math.PI, () => {
+        hint1.userData.flipped = true;
+    });
+    
+    animateCardFlip(hint2.parent, hint2.parent.rotation.y, hint2.parent.rotation.y + Math.PI, () => {
+        hint2.userData.flipped = true;
+    });
+    
+    setTimeout(() => {
+        animateCardFlip(hint1.parent, hint1.parent.rotation.y, 0, () => {
+            hint1.userData.flipped = false;
+        });
+        
+        animateCardFlip(hint2.parent, hint2.parent.rotation.y, 0, () => {
+            hint2.userData.flipped = false;
+            gameState.hintActive = false;
+        });
+    }, hintDuration);
+}
+
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    
+    // Update card hover effects
+    cardMeshes.forEach(mesh => {
+        if (mesh.userData.isHovered && !mesh.userData.matched) {
+            mesh.parent.position.z += (0.3 - mesh.parent.position.z) * 0.1;
+            mesh.parent.rotation.x += (0.1 - mesh.parent.rotation.x) * 0.1;
+        } else {
+            mesh.parent.position.z += (0 - mesh.parent.position.z) * 0.1;
+            mesh.parent.rotation.x += (0 - mesh.parent.rotation.x) * 0.1;
+        }
+    });
+    
+    updateTimer();
+    renderer.render(scene, camera);
+}
+
+// Event listeners
+document.getElementById('newGameBtn').addEventListener('click', newGame);
+document.getElementById('hintBtn').addEventListener('click', showHint);
+document.getElementById('playAgainBtn').addEventListener('click', newGame);
+
+// Initialize
+initThreeJS();
+newGame();
+animate();

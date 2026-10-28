@@ -1,49 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matching Game</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Matching Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🎮 Matching Game</h1>
-      <p class="subtitle">Find all the matching pairs!</p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>3D Matching Game</h1>
+            <div class="stats">
+                <div class="stat">
+                    <span class="label">Moves:</span>
+                    <span class="value" id="moves">0</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Matches:</span>
+                    <span class="value" id="matches">0/8</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Time:</span>
+                    <span class="value" id="timer">0:00</span>
+                </div>
+            </div>
+        </header>
 
-    <div class="stats">
-      <div class="stat-item">
-        <span class="stat-label">Moves:</span>
-        <span class="stat-value" id="moves">0</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Matches:</span>
-        <span class="stat-value" id="matches">0</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Time:</span>
-        <span class="stat-value" id="timer">0s</span>
-      </div>
+        <div class="game-area">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <button id="hintBtn" class="btn btn-secondary">💡 Hint</button>
+            <button id="newGameBtn" class="btn btn-primary">🔄 New Game</button>
+        </div>
     </div>
 
-    <div class="game-board" id="gameBoard"></div>
-
-    <div class="controls">
-      <button class="btn btn-primary" id="resetBtn">New Game</button>
-      <button class="btn btn-secondary" id="hintBtn">Hint</button>
+    <!-- Win Modal -->
+    <div id="winModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎉 You Won!</h2>
+            <div class="win-stats">
+                <p><strong>Moves:</strong> <span id="finalMoves">0</span></p>
+                <p><strong>Time:</strong> <span id="finalTime">0:00</span></p>
+            </div>
+            <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+        </div>
     </div>
 
-    <div class="modal" id="winModal">
-      <div class="modal-content">
-        <h2>🎉 You Won!</h2>
-        <p id="winStats"></p>
-        <button class="btn btn-primary" id="playAgainBtn">Play Again</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="game.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@r128/build/three.module.js"
+        }
+    }
+    </script>
+    <script type="module" src="game.js"></script>
 </body>
 </html>
