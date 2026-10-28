@@ -4,12 +4,13 @@
 
 const themeToggle = document.querySelector('.theme-toggle');
 
-// Check for saved theme preference or default to system preference
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+// Check for saved theme preference or default to dark theme
 const savedTheme = localStorage.getItem('theme');
-const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+const initialTheme = savedTheme || 'dark';
 
-document.documentElement.setAttribute('data-theme', initialTheme);
+if (initialTheme === 'light') {
+  document.documentElement.setAttribute('data-theme', 'light');
+}
 
 themeToggle.addEventListener('click', () => {
   const currentTheme = document.documentElement.getAttribute('data-theme');
