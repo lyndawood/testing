@@ -60,7 +60,15 @@
           </svg>
         </button>
       </div>
-      <form id="noteForm">
+      
+      <!-- Tab navigation -->
+      <div class="modal-tabs">
+        <button class="tab-btn active" id="singleNoteTab">Single note</button>
+        <button class="tab-btn" id="importCsvTab">Import CSV</button>
+      </div>
+      
+      <!-- Single note form -->
+      <form id="noteForm" class="tab-content active">
         <div class="form-group">
           <label for="noteTitle">Title</label>
           <input type="text" id="noteTitle" class="form-input" placeholder="Give it a name..." required>
@@ -74,9 +82,49 @@
           <button type="submit" class="btn-primary">Save note</button>
         </div>
       </form>
+      
+      <!-- CSV import form -->
+      <div id="csvImportForm" class="tab-content">
+        <div class="form-group">
+          <label for="csvInput">CSV Data</label>
+          <p class="form-hint">Paste CSV data with title and body columns. Supports quoted commas and embedded newlines.</p>
+          <textarea id="csvInput" class="form-textarea" placeholder="Title 1,Body 1&#10;Title 2,Body 2&#10;&quot;Title, with comma&quot;,&quot;Body with&#10;newline&quot;" rows="8"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancelImportBtn">Cancel</button>
+          <button type="button" class="btn-primary" id="parseCSVBtn">Preview rows</button>
+        </div>
+      </div>
     </div>
   </div>
   
-  <script src="app.js"></script>
+  <!-- Modal for CSV preview -->
+  <div class="modal" id="csvPreviewModal">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h3 class="modal-title">Review and import notes</h3>
+        <button class="modal-close" id="closePreviewModal">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="csvPreviewContent">
+        <!-- Preview rows will be inserted here -->
+      </div>
+      
+      <div id="csvPreviewSummary" class="preview-summary">
+        <!-- Summary will be inserted here -->
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="backToImportBtn">Back</button>
+        <button type="button" class="btn-primary" id="importSelectedBtn">Import selected</button>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="app.js"></script>
 </body>
 </html>
