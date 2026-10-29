@@ -203,6 +203,8 @@ function openModal() {
 function closeModalHandler() {
   noteModal.classList.remove('active');
   noteForm.reset();
+  csvInput.value = '';
+  switchTab('single'); // Reset to single note tab
 }
 
 // Create new note
@@ -454,10 +456,20 @@ noteModal.addEventListener('click', (e) => {
   }
 });
 
+csvPreviewModal.addEventListener('click', (e) => {
+  if (e.target === csvPreviewModal) {
+    closePreviewModalHandler();
+  }
+});
+
 // Close modal on Escape key
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && noteModal.classList.contains('active')) {
-    closeModalHandler();
+  if (e.key === 'Escape') {
+    if (csvPreviewModal.classList.contains('active')) {
+      closePreviewModalHandler();
+    } else if (noteModal.classList.contains('active')) {
+      closeModalHandler();
+    }
   }
 });
 
