@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
             --border: #e0e0e0;
             --error-bg: #fff5f5;
             --error-border: #feb2b2;
-            --error-text: #c53030;
+            --error-text: #991b1b;
             --code-bg: #f7fafc;
         }
         @media (prefers-color-scheme: dark) {
