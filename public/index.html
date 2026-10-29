@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DUSKNOTES - An Evening Notebook</title>
+  <style>
+    :root {
+      --bg-primary: #1a2420;
+      --bg-surface: #2d3a34;
+      --bg-card: #3d4d47;
+      --accent-warm: #8b7355;
+      --accent-cool: #5a7a7a;
+      --button: #a89080;
+      --text-muted: #7a9a8a;
+      --text-primary: #c4b5a0;
+      --spacing-unit: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: calc(var(--spacing-unit) * 4);
+      min-height: 100vh;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: calc(var(--spacing-unit) * 2);
+      }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: calc(var(--spacing-unit) * 6);
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: calc(var(--spacing-unit) * 2);
+      margin-bottom: calc(var(--spacing-unit) * 2);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .tagline {
+      font-size: clamp(1.125rem, 3vw, 1.875rem);
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: calc(var(--spacing-unit) * 1);
+      line-height: 1.3;
+    }
+
+    .description {
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    .add-note-section {
+      background-color: var(--bg-surface);
+      border-radius: 14px;
+      padding: calc(var(--spacing-unit) * 4);
+      margin-bottom: calc(var(--spacing-unit) * 4);
+    }
+
+    @media (max-width: 768px) {
+      .add-note-section {
+        padding: calc(var(--spacing-unit) * 3);
+      }
+    }
+
+    .add-note-section h2 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: calc(var(--spacing-unit) * 3);
+    }
+
+    .form-group {
+      margin-bottom: calc(var(--spacing-unit) * 2);
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: calc(var(--spacing-unit) * 1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      width: 100%;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--bg-card);
+      border-radius: 8px;
+      padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-cool);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.7;
+    }
+
+    button {
+      background-color: var(--button);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 12px;
+      padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 4);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: calc(var(--spacing-unit) * 1);
+    }
+
+    button:hover {
+      background-color: #b8a090;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:focus {
+      outline: 2px solid var(--accent-cool);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      button:hover {
+        transform: none;
+      }
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+      gap: calc(var(--spacing-unit) * 3);
+      margin-top: calc(var(--spacing-unit) * 4);
+    }
+
+    .note-card {
+      background-color: var(--bg-card);
+      border-radius: 14px;
+      padding: calc(var(--spacing-unit) * 3);
+      transition: transform 0.2s ease;
+    }
+
+    .note-card:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .note-card:hover {
+        transform: none;
+      }
+    }
+
+    .note-card.warm {
+      background-color: var(--accent-warm);
+    }
+
+    .note-card.cool {
+      background-color: var(--accent-cool);
+    }
+
+    .note-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: calc(var(--spacing-unit) * 1.5);
+      font-weight: 500;
+    }
+
+    .note-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: calc(var(--spacing-unit) * 1.5);
+      line-height: 1.3;
+    }
+
+    .note-body {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: calc(var(--spacing-unit) * 2);
+      opacity: 0.95;
+    }
+
+    .note-timestamp {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: calc(var(--spacing-unit) * 8) calc(var(--spacing-unit) * 4);
+      color: var(--text-muted);
+    }
+
+    .empty-state p {
+      font-size: 1.125rem;
+      margin-bottom: calc(var(--spacing-unit) * 1);
+    }
+
+    .empty-state small {
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+
+    @media (prefers-color-scheme: light) {
+      /* Keep dark theme regardless of system preference for this evening notebook */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>DUSKNOTES</h1>
+      </div>
+      <p class="subtitle">An evening notebook</p>
+      <h2 class="tagline">A quiet place to think.</h2>
+      <p class="description">Keep the small thoughts close.</p>
+    </header>
+
+    <section class="add-note-section">
+      <h2>+ New note</h2>
+      <form id="noteForm">
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input 
+            type="text" 
+            id="noteTitle" 
+            name="title" 
+            placeholder="A thought for tonight..."
+            required
+          >
+        </div>
+        <div class="form-group">
+          <label for="noteBody">Body</label>
+          <textarea 
+            id="noteBody" 
+            name="body" 
+            placeholder="Write your reflections here..."
+            required
+          ></textarea>
+        </div>
+        <button type="submit">Save note</button>
+      </form>
+    </section>
+
+    <div id="notesContainer">
+      <div class="empty-state">
+        <p>Loading your notes...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const noteForm = document.getElementById('noteForm');
+    const notesContainer = document.getElementById('notesContainer');
+    const noteTitleInput = document.getElementById('noteTitle');
+    const noteBodyInput = document.getElementById('noteBody');
+
+    // Fetch and display notes
+    async function loadNotes() {
+      try {
+        const response = await fetch('/api/notes');
+        const notes = await response.json();
+        displayNotes(notes);
+      } catch (error) {
+        console.error('Error loading notes:', error);
+        notesContainer.innerHTML = `
+          <div class="empty-state">
+            <p>Unable to load notes.</p>
+            <small>Please try refreshing the page.</small>
+          </div>
+        `;
+      }
+    }
+
+    // Display notes in the grid
+    function displayNotes(notes) {
+      if (notes.length === 0) {
+        notesContainer.innerHTML = `
+          <div class="empty-state">
+            <p>No notes yet.</p>
+            <small>Create your first evening thought above.</small>
+          </div>
+        `;
+        return;
+      }
+
+      const notesHTML = notes.map((note, index) => {
+        // Alternate between warm, cool, and default card styles
+        const cardClass = index % 3 === 0 ? 'warm' : index % 3 === 1 ? 'cool' : '';
+        const timestamp = new Date(note.timestamp).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit'
+        });
+
+        return `
+          <article class="note-card ${cardClass}">
+            <div class="note-meta">Personal / Notes</div>
+            <h3 class="note-title">${escapeHtml(note.title)}</h3>
+            <p class="note-body">${escapeHtml(note.body)}</p>
+            <time class="note-timestamp" datetime="${note.timestamp}">${timestamp}</time>
+          </article>
+        `;
+      }).join('');
+
+      notesContainer.innerHTML = `<div class="notes-grid">${notesHTML}</div>`;
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Handle form submission
+    noteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const title = noteTitleInput.value.trim();
+      const body = noteBodyInput.value.trim();
+
+      if (!title || !body) {
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/notes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, body })
+        });
+
+        if (response.ok) {
+          // Clear form
+          noteTitleInput.value = '';
+          noteBodyInput.value = '';
+          
+          // Reload notes
+          await loadNotes();
+          
+          // Focus back on title input
+          noteTitleInput.focus();
+        } else {
+          const error = await response.json();
+          alert('Error creating note: ' + (error.error || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Error creating note:', error);
+        alert('Unable to create note. Please try again.');
+      }
+    });
+
+    // Load notes on page load
+    loadNotes();
+  </script>
+</body>
+</html>
