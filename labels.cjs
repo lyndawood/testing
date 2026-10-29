@@ -1,3 +1,5 @@
+// Code panel no-plan smoke
+
 /**
  * Escapes HTML special characters to prevent XSS attacks
  * @param {string} str - The string to escape
