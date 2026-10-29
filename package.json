@@ -1,7 +1,7 @@
 {
   "name": "testing",
   "version": "1.0.0",
-  "description": "A simple testing example",
+  "description": "A simple testing example with footer demo (CommonJS modules)",
   "type": "module",
   "scripts": {
     "test": "node --test"
