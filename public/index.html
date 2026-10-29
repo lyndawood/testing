@@ -40,6 +40,7 @@
       line-height: 1.6;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 24px;
@@ -48,6 +49,19 @@
     .container {
       max-width: 480px;
       width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-pending);
     }
 
     h1 {
@@ -194,6 +208,7 @@
     @media (prefers-reduced-motion: reduce) {
       .status-dot.online {
         animation: none;
+        opacity: 1;
       }
       
       .status-card,
@@ -222,6 +237,7 @@
         </button>
       </div>
     </div>
+    <footer>PR45 live preview check</footer>
   </div>
 
   <script>
