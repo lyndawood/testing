@@ -2,14 +2,14 @@
   /* Color palette */
   --color-sidebar-bg: #1a4d47;
   --color-main-bg: #e8e4d0;
-  --color-card-1: #d4a574;
-  --color-card-2: #c9d9a3;
-  --color-card-3: #d9c9b8;
-  --color-card-4: #b8d4e0;
-  --color-accent: #c85a3a;
-  --color-text-dark: #2d5a54;
-  --color-text-light: #e8e4d0;
-  --color-text-muted: #6b7c78;
+  --color-card-1: #c89554;
+  --color-card-2: #b5c77d;
+  --color-card-3: #c9b59d;
+  --color-card-4: #8fc3d6;
+  --color-accent: #b34d2f;
+  --color-text-dark: #1f3d39;
+  --color-text-light: #ffffff;
+  --color-text-muted: #4a5f5b;
   
   /* Typography */
   --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
