@@ -3,10 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merge preview validation</title>
+    <title>Modern Solutions - Fast, Secure, Affordable</title>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-dark: #1e40af;
+            --color-bg: #ffffff;
+            --color-surface: #f8fafc;
+            --color-text: #1e293b;
+            --color-text-muted: #64748b;
+            --color-border: #e2e8f0;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --spacing-2xl: 4rem;
+            --radius: 0.75rem;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-primary: #3b82f6;
+                --color-primary-dark: #2563eb;
+                --color-bg: #0f172a;
+                --color-surface: #1e293b;
+                --color-text: #f1f5f9;
+                --color-text-muted: #94a3b8;
+                --color-border: #334155;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-2xl) var(--spacing-md);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            padding: var(--spacing-xl) var(--spacing-md);
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .card:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-lg);
+            }
+        }
+
+        .card:focus-within {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .card h2 {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-text);
+        }
+
+        .card p {
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+
+        footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: var(--spacing-lg) var(--spacing-md);
+            text-align: center;
+            color: var(--color-text-muted);
+            margin-top: auto;
+        }
+
+        footer p {
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 768px) {
+            header {
+                padding: var(--spacing-2xl) var(--spacing-lg);
+            }
+
+            main {
+                padding: var(--spacing-2xl) var(--spacing-lg);
+            }
+
+            .cards {
+                margin-top: var(--spacing-2xl);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Main preview E2E b9d14df</h1>
-    <p>Merged through Forge PR 49 validation</p>
+    <header role="banner">
+        <h1>Modern Solutions</h1>
+        <p class="tagline">Empowering your business with cutting-edge technology that's fast, secure, and affordable</p>
+    </header>
+
+    <main role="main">
+        <div class="cards">
+            <article class="card">
+                <svg class="card-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <h2>Lightning Fast</h2>
+                <p>Experience blazing-fast performance with our optimized infrastructure. Load times under 100ms ensure your users stay engaged and your business stays ahead of the competition.</p>
+            </article>
+
+            <article class="card">
+                <svg class="card-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <h2>Secure by Default</h2>
+                <p>Built with security at its core. End-to-end encryption, regular security audits, and compliance with industry standards keep your data safe and your mind at ease.</p>
+            </article>
+
+            <article class="card">
+                <svg class="card-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2>Cost Effective</h2>
+                <p>Premium features without the premium price tag. Our transparent pricing and flexible plans scale with your business, ensuring you only pay for what you need.</p>
+            </article>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2024 Modern Solutions. Built with care for the modern web.</p>
+    </footer>
 </body>
 </html>
