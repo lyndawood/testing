@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Label Demo - Accessible Label Repeater</title>
+  <meta name="description" content="An accessible demo of the repeatLabel function with HTML escaping and comprehensive testing">
+  <link rel="stylesheet" href="labels.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Label Demo</h1>
+      <p class="subtitle">Generate repeated labels with HTML escaping and accessibility features</p>
+    </header>
+
+    <main>
+      <form id="labelForm" novalidate>
+        <div class="form-group">
+          <label for="labelInput">
+            Label Text
+            <span class="sr-only">(will be HTML-escaped for safety)</span>
+          </label>
+          <input
+            type="text"
+            id="labelInput"
+            name="label"
+            placeholder="Enter label text (e.g., 'Hello')"
+            required
+            aria-describedby="labelHelp"
+          >
+          <small id="labelHelp" style="display: block; margin-top: 0.5rem; color: var(--color-text-secondary); font-size: 0.875rem;">
+            HTML tags will be escaped for security
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="countInput">
+            Repeat Count
+            <span class="sr-only">(must be a positive number)</span>
+          </label>
+          <input
+            type="number"
+            id="countInput"
+            name="count"
+            placeholder="Enter count (e.g., 3)"
+            min="0"
+            step="1"
+            required
+            aria-describedby="countHelp"
+          >
+          <small id="countHelp" style="display: block; margin-top: 0.5rem; color: var(--color-text-secondary); font-size: 0.875rem;">
+            Negative numbers will produce no output
+          </small>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" id="generateBtn">
+            <span aria-hidden="true">✨</span> Generate Labels
+          </button>
+        </div>
+      </form>
+
+      <div class="output-section">
+        <div class="output-label" id="outputLabel">Output</div>
+        <div
+          id="output"
+          class="output"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          aria-labelledby="outputLabel"
+        ></div>
+      </div>
+    </main>
+
+    <footer>
+      <p>
+        Built with accessibility in mind. 
+        <a href="label-demo.md">View documentation</a>
+      </p>
+    </footer>
+  </div>
+
+  <script type="module">
+    // Import the repeatLabel function
+    // Note: In a browser environment, we need to load the CommonJS module differently
+    // For this demo, we'll inline the function with the same logic
+    
+    /**
+     * Escapes HTML special characters to prevent XSS attacks
+     */
+    function escapeHtml(str) {
+      if (typeof str !== 'string') {
+        return '';
+      }
+      
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /**
+     * Repeats a label string a specified number of times with HTML escaping
+     */
+    function repeatLabel(label, count) {
+      if (typeof label !== 'string') {
+        label = '';
+      }
+      
+      if (typeof count !== 'number' || !Number.isFinite(count)) {
+        count = 0;
+      }
+      
+      if (count < 0) {
+        return '';
+      }
+      
+      count = Math.floor(count);
+      
+      if (count === 0 || label === '') {
+        return '';
+      }
+      
+      const escapedLabel = escapeHtml(label);
+      const result = [];
+      for (let i = 0; i < count; i++) {
+        result.push(escapedLabel);
+      }
+      
+      return result.join(' ');
+    }
+
+    // DOM elements
+    const form = document.getElementById('labelForm');
+    const labelInput = document.getElementById('labelInput');
+    const countInput = document.getElementById('countInput');
+    const output = document.getElementById('output');
+
+    // Form submission handler
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const label = labelInput.value;
+      const count = parseFloat(countInput.value);
+      
+      // Generate the repeated labels
+      const result = repeatLabel(label, count);
+      
+      // Update the output
+      if (result) {
+        output.textContent = result;
+        output.classList.add('has-content');
+      } else {
+        output.textContent = '(empty result)';
+        output.classList.remove('has-content');
+      }
+    });
+
+    // Real-time validation feedback
+    labelInput.addEventListener('input', () => {
+      if (labelInput.value.includes('<') || labelInput.value.includes('>')) {
+        labelInput.setAttribute('aria-invalid', 'false');
+        // Note: We allow these characters but will escape them
+      }
+    });
+
+    countInput.addEventListener('input', () => {
+      const value = parseFloat(countInput.value);
+      if (value < 0) {
+        countInput.setAttribute('aria-invalid', 'true');
+      } else {
+        countInput.setAttribute('aria-invalid', 'false');
+      }
+    });
+
+    // Set initial focus
+    labelInput.focus();
+  </script>
+</body>
+</html>
