@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
                 --border: #404040;
                 --error-bg: #2d1a1a;
                 --error-border: #9b2c2c;
-                --error-text: #fc8181;
+                --error-text: #fca5a5;
                 --code-bg: #2d3748;
             }
         }
