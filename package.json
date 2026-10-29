@@ -4,6 +4,10 @@
   "description": "A simple testing example",
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
   }
 }
