@@ -3,10 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merge preview validation</title>
+    <title>Online wrap-up check</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #ffffff;
+            }
+        }
+
+        main {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #000000;
+            line-height: 1.2;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            h1 {
+                color: #ffffff;
+            }
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #333333;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            p {
+                color: #e0e0e0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Main preview E2E b9d14df</h1>
-    <p>Merged through Forge PR 49 validation</p>
+    <main>
+        <h1>Online wrap-up check</h1>
+        <p>A quick review of your work and progress.</p>
+    </main>
 </body>
 </html>
