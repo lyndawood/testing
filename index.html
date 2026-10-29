@@ -3,10 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merge preview validation</title>
+    <title>Preview Diagnostic Fixture</title>
 </head>
 <body>
-    <h1>Main preview E2E b9d14df</h1>
-    <p>Merged through Forge PR 49 validation</p>
+    <script>
+        fetch('/api/items')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.createElement('div');
+                container.innerHTML = '<h1>API Success</h1>';
+                
+                const list = document.createElement('ul');
+                data.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.id}: ${item.name} (${item.status})`;
+                    list.appendChild(li);
+                });
+                
+                container.appendChild(list);
+                document.body.appendChild(container);
+            })
+            .catch(error => {
+                console.error('API fetch failed:', error);
+                // Leave body empty on failure
+            });
+    </script>
 </body>
 </html>
