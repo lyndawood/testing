@@ -16,7 +16,7 @@ app.use(express.static('public'));
 let notes = [
   {
     id: 1,
-    title: 'Welcome to Fieldnote',
+    title: 'Welcome to Fieldnotes',
     body: 'Your personal idea garden starts here.',
     category: 'PERSONAL / NOTES',
     timestamp: new Date().toISOString()
@@ -54,5 +54,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Fieldnote app running on http://0.0.0.0:${PORT}`);
+  console.log(`Fieldnotes app running on http://0.0.0.0:${PORT}`);
 });
