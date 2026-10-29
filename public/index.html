@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIELDNOTES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1 class="app-title">FIELDNOTES</h1>
+        <p class="app-tagline">A little room to think.</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="all">All notes</button>
+        <button class="nav-item" data-view="ideas">Ideas</button>
+        <button class="nav-item" data-view="archive">Archive</button>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <p class="footer-label">YOUR PERSONAL</p>
+        <p class="footer-title">IDEA GARDEN</p>
+      </div>
+    </aside>
+    
+    <main class="main-content">
+      <header class="content-header">
+        <div class="header-text">
+          <p class="header-label">YOUR EVERYDAY NOTEBOOK</p>
+          <h2 class="header-title">Small notes. Big ideas.</h2>
+          <p class="header-subtitle">Keep the good thoughts close.</p>
+        </div>
+        <button class="btn-new-note" id="newNoteBtn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          New note
+        </button>
+      </header>
+      
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search your notes..." id="searchInput">
+      </div>
+      
+      <div class="notes-grid" id="notesGrid">
+        <!-- Notes will be rendered here -->
+      </div>
+    </main>
+  </div>
+  
+  <!-- New Note Modal -->
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create a new note</h3>
+        <button class="modal-close" id="closeModal" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <form id="noteForm">
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" name="title" required placeholder="Give your note a title">
+        </div>
+        <div class="form-group">
+          <label for="noteBody">Note</label>
+          <textarea id="noteBody" name="body" required placeholder="What's on your mind?" rows="6"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Save note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
