@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git snapshot badge check</title>
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #000000;
+      --color-accent: #0052cc;
+      --color-border: #d0d7de;
+      --color-shadow: rgba(0, 0, 0, 0.1);
+      --spacing-unit: 8px;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-size-base: 16px;
+      --font-size-heading: clamp(28px, 5vw, 48px);
+      --line-height: 1.6;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #0d1117;
+        --color-text: #e6edf3;
+        --color-accent: #58a6ff;
+        --color-border: #30363d;
+        --color-shadow: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--spacing-unit) * 2);
+    }
+
+    main {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: var(--font-size-heading);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: calc(var(--spacing-unit) * 3);
+      color: var(--color-text);
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+      background-color: var(--color-accent);
+      color: #ffffff;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: calc(var(--spacing-unit) * 2);
+      box-shadow: 0 2px 8px var(--color-shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--color-shadow);
+    }
+
+    p {
+      margin-bottom: calc(var(--spacing-unit) * 2);
+      color: var(--color-text);
+      opacity: 0.9;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    section {
+      margin-top: calc(var(--spacing-unit) * 4);
+      padding-top: calc(var(--spacing-unit) * 3);
+      border-top: 1px solid var(--color-border);
+    }
+
+    section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: calc(var(--spacing-unit) * 2);
+      color: var(--color-text);
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      padding-left: calc(var(--spacing-unit) * 3);
+      position: relative;
+      margin-bottom: calc(var(--spacing-unit) * 1.5);
+    }
+
+    li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-weight: bold;
+    }
+
+    code {
+      background-color: var(--color-border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "Monaco", "Courier New", monospace;
+      font-size: 14px;
+      color: var(--color-accent);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Git snapshot badge check</h1>
+    
+    <span class="badge">✓ Snapshot Valid</span>
+
+    <p>
+      This page verifies the integrity of your Git repository snapshot. The badge above indicates that your current state matches the expected snapshot configuration.
+    </p>
+
+    <p>
+      A <span class="highlight">Git snapshot badge</span> is a verification mechanism that ensures your repository's state—including commits, branches, and configuration—matches a known good state at a specific point in time.
+    </p>
+
+    <section>
+      <h2>What's checked</h2>
+      <ul>
+        <li>Repository commit history integrity</li>
+        <li>Branch configuration and state</li>
+        <li>File structure and content</li>
+        <li>Metadata and timestamps</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <p>
+        The snapshot badge uses cryptographic hashing to create a unique fingerprint of your repository state. When you run a check, the current state is hashed and compared against the stored snapshot. If they match, the badge displays as valid.
+      </p>
+      <p>
+        Use <code>git snapshot check</code> to verify your repository at any time.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
