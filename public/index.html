@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DUSKNOTES - An evening notebook</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="app-title">DUSKNOTES</h1>
+      <p class="app-tagline">Quiet thoughts after dark.</p>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <button class="nav-item active">All notes</button>
+      <button class="nav-item">Ideas</button>
+      <button class="nav-item">Archive</button>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <p class="footer-label">Your evening</p>
+      <p class="footer-title">Thought garden</p>
+    </div>
+  </aside>
+  
+  <main class="main-content">
+    <header class="page-header">
+      <div class="header-text">
+        <p class="header-label">An evening notebook</p>
+        <h2 class="header-title">A quiet place to think.</h2>
+        <p class="header-subtitle">Keep the small thoughts close.</p>
+      </div>
+      <button class="btn-new-note" id="newNoteBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        New note
+      </button>
+    </header>
+    
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search your notes..." id="searchInput">
+    </div>
+    
+    <div class="notes-grid" id="notesGrid">
+      <!-- Notes will be inserted here -->
+    </div>
+  </main>
+  
+  <!-- Modal for creating new notes -->
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">New note</h3>
+        <button class="modal-close" id="closeModal">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <form id="noteForm">
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" class="form-input" placeholder="Give it a name..." required>
+        </div>
+        <div class="form-group">
+          <label for="noteBody">Thoughts</label>
+          <textarea id="noteBody" class="form-textarea" placeholder="Write what comes to mind..." rows="6" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Save note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
