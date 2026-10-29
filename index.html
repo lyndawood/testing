@@ -13,13 +13,13 @@
             --bg-secondary: #f8fafc;
             --bg-card: #ffffff;
             --text: #1e293b;
-            --text-secondary: #64748b;
+            --text-secondary: #475569;
             --border: #e2e8f0;
             --shadow: rgba(0, 0, 0, 0.1);
             --shadow-lg: rgba(0, 0, 0, 0.15);
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
             --spacing-xs: 4px;
             --spacing-sm: 8px;
             --spacing-md: 16px;
@@ -34,10 +34,13 @@
             --bg-secondary: #1e293b;
             --bg-card: #1e293b;
             --text: #f1f5f9;
-            --text-secondary: #94a3b8;
+            --text-secondary: #cbd5e1;
             --border: #334155;
             --shadow: rgba(0, 0, 0, 0.3);
             --shadow-lg: rgba(0, 0, 0, 0.5);
+            --success: #10b981;
+            --warning: #fbbf24;
+            --danger: #f87171;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -46,10 +49,13 @@
                 --bg-secondary: #1e293b;
                 --bg-card: #1e293b;
                 --text: #f1f5f9;
-                --text-secondary: #94a3b8;
+                --text-secondary: #cbd5e1;
                 --border: #334155;
                 --shadow: rgba(0, 0, 0, 0.3);
                 --shadow-lg: rgba(0, 0, 0, 0.5);
+                --success: #10b981;
+                --warning: #fbbf24;
+                --danger: #f87171;
             }
         }
 
@@ -258,18 +264,18 @@
         }
 
         .priority-high {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
+            background: rgba(220, 38, 38, 0.15);
+            color: #991b1b;
         }
 
         .priority-medium {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
+            background: rgba(217, 119, 6, 0.15);
+            color: #92400e;
         }
 
         .priority-low {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
+            background: rgba(5, 150, 105, 0.15);
+            color: #065f46;
         }
 
         .card-description {
@@ -481,6 +487,38 @@
         .btn-secondary:focus {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
+        }
+
+        [data-theme="dark"] .priority-high {
+            background: rgba(248, 113, 113, 0.2);
+            color: #fca5a5;
+        }
+
+        [data-theme="dark"] .priority-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fcd34d;
+        }
+
+        [data-theme="dark"] .priority-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .priority-high {
+                background: rgba(248, 113, 113, 0.2);
+                color: #fca5a5;
+            }
+
+            :root:not([data-theme="light"]) .priority-medium {
+                background: rgba(251, 191, 36, 0.2);
+                color: #fcd34d;
+            }
+
+            :root:not([data-theme="light"]) .priority-low {
+                background: rgba(16, 185, 129, 0.2);
+                color: #6ee7b7;
+            }
         }
 
         @media (max-width: 768px) {
