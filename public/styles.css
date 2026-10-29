@@ -5,7 +5,7 @@
   --color-card: #3d4d47;
   --color-card-warm: #8b7355;
   --color-card-cool: #5a7a7a;
-  --color-button: #a89080;
+  --color-button: #5a9a9a;
   --color-button-text: #f5f1ed;
   --color-text-muted: #d5e9de;
   --color-text-primary: #f8edd8;
@@ -183,7 +183,7 @@ body {
 }
 
 .btn-new-note:hover {
-  background-color: #b8a090;
+  background-color: #6ab0b0;
   transform: translateY(-1px);
 }
 
@@ -413,7 +413,7 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: #b8a090;
+  background-color: #6ab0b0;
   transform: translateY(-1px);
 }
 
