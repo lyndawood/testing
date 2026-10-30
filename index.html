@@ -3,10 +3,713 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merge preview validation</title>
+    <title>Space Checkers</title>
+    <style>
+        :root {
+            --space-dark: #0a0e27;
+            --space-blue: #1a2a6c;
+            --space-purple: #4a148c;
+            --nebula-pink: #c2185b;
+            --nebula-cyan: #00bcd4;
+            --star-white: #ffffff;
+            --board-light: #2d3561;
+            --board-dark: #1a1f3a;
+            --highlight: #ffd700;
+            --player1: #ff6b9d;
+            --player2: #4fc3f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--space-dark);
+            color: var(--star-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent),
+                radial-gradient(1px 1px at 15% 90%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            animation: stars 200s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes stars {
+            from { background-position: 0% 0%; }
+            to { background-position: 100% 100%; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--nebula-pink), var(--nebula-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 16px;
+            background: rgba(26, 42, 108, 0.4);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .turn-indicator {
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .turn-piece {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .player1-turn {
+            background: var(--player1);
+            box-shadow: 0 0 12px var(--player1);
+        }
+
+        .player2-turn {
+            background: var(--player2);
+            box-shadow: 0 0 12px var(--player2);
+        }
+
+        .reset-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--nebula-pink), var(--space-purple));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1rem;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194, 24, 91, 0.4);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+
+        .reset-btn:focus {
+            outline: 2px solid var(--highlight);
+            outline-offset: 2px;
+        }
+
+        .board-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+            width: 100%;
+            aspect-ratio: 1;
+        }
+
+        .square {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .square.light {
+            background: var(--board-light);
+        }
+
+        .square.dark {
+            background: var(--board-dark);
+        }
+
+        .square.selected {
+            background: var(--highlight);
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .square.valid-move {
+            background: rgba(0, 255, 136, 0.3);
+            cursor: pointer;
+        }
+
+        .square.valid-move::after {
+            content: '';
+            width: 30%;
+            height: 30%;
+            background: rgba(0, 255, 136, 0.6);
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .piece {
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .piece:hover {
+            transform: scale(1.1);
+        }
+
+        .piece.player1 {
+            background: radial-gradient(circle at 30% 30%, var(--player1), #d81b60);
+            box-shadow: 0 4px 8px rgba(255, 107, 157, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        }
+
+        .piece.player2 {
+            background: radial-gradient(circle at 30% 30%, var(--player2), #0288d1);
+            box-shadow: 0 4px 8px rgba(79, 195, 247, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        }
+
+        .piece.king::after {
+            content: '★';
+            font-size: 1.5em;
+            color: var(--highlight);
+            text-shadow: 0 0 8px var(--highlight);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            text-align: center;
+            padding: 16px;
+            background: rgba(26, 42, 108, 0.4);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.125rem;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message.winner {
+            background: linear-gradient(135deg, rgba(194, 24, 91, 0.4), rgba(74, 20, 140, 0.4));
+            border: 2px solid var(--highlight);
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .instructions {
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(26, 42, 108, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .instructions h2 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--nebula-cyan);
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--nebula-pink);
+        }
+
+        @media (max-width: 640px) {
+            .game-info {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .board {
+                padding: 4px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Main preview E2E b9d14df</h1>
-    <p>Merged through Forge PR 49 validation</p>
+    <div class="container">
+        <header>
+            <h1>SPACE CHECKERS</h1>
+        </header>
+
+        <div class="game-info">
+            <div class="turn-indicator">
+                <span id="turn-text">Pink Planet's Turn</span>
+                <span class="turn-piece player1-turn" id="turn-piece"></span>
+            </div>
+            <button class="reset-btn" id="reset-btn" aria-label="Reset game">New Game</button>
+        </div>
+
+        <div class="board-container">
+            <div class="board" id="board" role="grid" aria-label="Checkers board"></div>
+        </div>
+
+        <div class="message" id="message" role="status" aria-live="polite">
+            Click a pink planet to start your journey!
+        </div>
+
+        <div class="instructions">
+            <h2>How to Play</h2>
+            <ul>
+                <li>Click a piece to select it, then click a highlighted square to move</li>
+                <li>Jump over opponent pieces to capture them</li>
+                <li>Reach the opposite end to become a King (★) and move backwards</li>
+                <li>Capture all opponent pieces to win!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        class SpaceCheckers {
+            constructor() {
+                this.board = this.createInitialBoard();
+                this.currentPlayer = 1; // 1 = pink, 2 = blue
+                this.selectedPiece = null;
+                this.validMoves = [];
+                this.mustJump = false;
+                this.boardElement = document.getElementById('board');
+                this.messageElement = document.getElementById('message');
+                this.turnTextElement = document.getElementById('turn-text');
+                this.turnPieceElement = document.getElementById('turn-piece');
+                
+                this.initializeBoard();
+                this.updateTurnIndicator();
+                
+                document.getElementById('reset-btn').addEventListener('click', () => this.resetGame());
+            }
+
+            createInitialBoard() {
+                const board = Array(8).fill(null).map(() => Array(8).fill(null));
+                
+                // Place player 1 pieces (pink) on top
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        if ((row + col) % 2 === 1) {
+                            board[row][col] = { player: 1, king: false };
+                        }
+                    }
+                }
+                
+                // Place player 2 pieces (blue) on bottom
+                for (let row = 5; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        if ((row + col) % 2 === 1) {
+                            board[row][col] = { player: 2, king: false };
+                        }
+                    }
+                }
+                
+                return board;
+            }
+
+            initializeBoard() {
+                this.boardElement.innerHTML = '';
+                
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const square = document.createElement('div');
+                        square.className = `square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                        square.dataset.row = row;
+                        square.dataset.col = col;
+                        square.setAttribute('role', 'gridcell');
+                        square.setAttribute('aria-label', `Square ${String.fromCharCode(65 + col)}${8 - row}`);
+                        
+                        square.addEventListener('click', () => this.handleSquareClick(row, col));
+                        
+                        this.boardElement.appendChild(square);
+                    }
+                }
+                
+                this.renderBoard();
+            }
+
+            renderBoard() {
+                const squares = this.boardElement.querySelectorAll('.square');
+                
+                squares.forEach(square => {
+                    const row = parseInt(square.dataset.row);
+                    const col = parseInt(square.dataset.col);
+                    const piece = this.board[row][col];
+                    
+                    square.innerHTML = '';
+                    square.classList.remove('selected', 'valid-move');
+                    
+                    if (piece) {
+                        const pieceElement = document.createElement('div');
+                        pieceElement.className = `piece player${piece.player}${piece.king ? ' king' : ''}`;
+                        pieceElement.setAttribute('role', 'button');
+                        pieceElement.setAttribute('aria-label', 
+                            `${piece.player === 1 ? 'Pink' : 'Blue'} ${piece.king ? 'king' : 'piece'}`);
+                        square.appendChild(pieceElement);
+                    }
+                    
+                    if (this.selectedPiece && 
+                        this.selectedPiece.row === row && 
+                        this.selectedPiece.col === col) {
+                        square.classList.add('selected');
+                    }
+                    
+                    if (this.validMoves.some(move => move.row === row && move.col === col)) {
+                        square.classList.add('valid-move');
+                    }
+                });
+            }
+
+            handleSquareClick(row, col) {
+                const piece = this.board[row][col];
+                
+                // If clicking a valid move square
+                if (this.validMoves.some(move => move.row === row && move.col === col)) {
+                    this.movePiece(row, col);
+                    return;
+                }
+                
+                // If clicking own piece
+                if (piece && piece.player === this.currentPlayer) {
+                    this.selectPiece(row, col);
+                } else {
+                    this.deselectPiece();
+                }
+            }
+
+            selectPiece(row, col) {
+                this.selectedPiece = { row, col };
+                this.validMoves = this.getValidMoves(row, col);
+                
+                // If must jump, filter to only jump moves
+                if (this.mustJump) {
+                    this.validMoves = this.validMoves.filter(move => move.isJump);
+                }
+                
+                this.renderBoard();
+                
+                if (this.validMoves.length === 0) {
+                    this.setMessage('No valid moves for this piece. Try another!');
+                } else {
+                    this.setMessage(`${this.validMoves.length} move${this.validMoves.length > 1 ? 's' : ''} available`);
+                }
+            }
+
+            deselectPiece() {
+                this.selectedPiece = null;
+                this.validMoves = [];
+                this.renderBoard();
+                this.setMessage(`${this.currentPlayer === 1 ? 'Pink' : 'Blue'}'s turn`);
+            }
+
+            getValidMoves(row, col) {
+                const piece = this.board[row][col];
+                if (!piece) return [];
+                
+                const moves = [];
+                const directions = this.getMoveDirections(piece);
+                
+                // Check regular moves and jumps
+                for (const [dRow, dCol] of directions) {
+                    // Regular move
+                    const newRow = row + dRow;
+                    const newCol = col + dCol;
+                    
+                    if (this.isValidPosition(newRow, newCol) && !this.board[newRow][newCol]) {
+                        moves.push({ row: newRow, col: newCol, isJump: false });
+                    }
+                    
+                    // Jump move
+                    const jumpRow = row + dRow * 2;
+                    const jumpCol = col + dCol * 2;
+                    const middleRow = row + dRow;
+                    const middleCol = col + dCol;
+                    
+                    if (this.isValidPosition(jumpRow, jumpCol) &&
+                        !this.board[jumpRow][jumpCol] &&
+                        this.board[middleRow][middleCol] &&
+                        this.board[middleRow][middleCol].player !== piece.player) {
+                        moves.push({ 
+                            row: jumpRow, 
+                            col: jumpCol, 
+                            isJump: true,
+                            captureRow: middleRow,
+                            captureCol: middleCol
+                        });
+                    }
+                }
+                
+                return moves;
+            }
+
+            getMoveDirections(piece) {
+                const directions = [];
+                
+                if (piece.player === 1 || piece.king) {
+                    directions.push([1, -1], [1, 1]); // Move down
+                }
+                
+                if (piece.player === 2 || piece.king) {
+                    directions.push([-1, -1], [-1, 1]); // Move up
+                }
+                
+                return directions;
+            }
+
+            isValidPosition(row, col) {
+                return row >= 0 && row < 8 && col >= 0 && col < 8;
+            }
+
+            movePiece(toRow, toCol) {
+                const move = this.validMoves.find(m => m.row === toRow && m.col === toCol);
+                if (!move) return;
+                
+                const { row: fromRow, col: fromCol } = this.selectedPiece;
+                const piece = this.board[fromRow][fromCol];
+                
+                // Move the piece
+                this.board[toRow][toCol] = piece;
+                this.board[fromRow][fromCol] = null;
+                
+                // Handle capture
+                let continueTurn = false;
+                if (move.isJump) {
+                    this.board[move.captureRow][move.captureCol] = null;
+                    
+                    // Check for additional jumps
+                    const additionalJumps = this.getValidMoves(toRow, toCol).filter(m => m.isJump);
+                    if (additionalJumps.length > 0) {
+                        continueTurn = true;
+                        this.selectedPiece = { row: toRow, col: toCol };
+                        this.validMoves = additionalJumps;
+                        this.setMessage('Multi-jump! Keep going!');
+                    }
+                }
+                
+                // Check for king promotion
+                if (!piece.king) {
+                    if ((piece.player === 1 && toRow === 7) || 
+                        (piece.player === 2 && toRow === 0)) {
+                        piece.king = true;
+                        this.setMessage('👑 Promoted to King! 👑');
+                        setTimeout(() => {
+                            if (!this.checkWinner()) {
+                                this.setMessage(`${this.currentPlayer === 1 ? 'Pink' : 'Blue'}'s turn`);
+                            }
+                        }, 2000);
+                    }
+                }
+                
+                this.renderBoard();
+                
+                // Check for winner
+                if (this.checkWinner()) {
+                    return;
+                }
+                
+                // Switch turns if no continue
+                if (!continueTurn) {
+                    this.selectedPiece = null;
+                    this.validMoves = [];
+                    this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
+                    this.updateTurnIndicator();
+                    
+                    // Check if current player must jump
+                    this.mustJump = this.checkMustJump();
+                    
+                    if (this.mustJump) {
+                        this.setMessage('You must capture an opponent piece!');
+                    } else {
+                        this.setMessage(`${this.currentPlayer === 1 ? 'Pink' : 'Blue'}'s turn`);
+                    }
+                }
+            }
+
+            checkMustJump() {
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const piece = this.board[row][col];
+                        if (piece && piece.player === this.currentPlayer) {
+                            const moves = this.getValidMoves(row, col);
+                            if (moves.some(move => move.isJump)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+
+            checkWinner() {
+                let player1Pieces = 0;
+                let player2Pieces = 0;
+                let player1HasMoves = false;
+                let player2HasMoves = false;
+                
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const piece = this.board[row][col];
+                        if (piece) {
+                            if (piece.player === 1) {
+                                player1Pieces++;
+                                if (this.getValidMoves(row, col).length > 0) {
+                                    player1HasMoves = true;
+                                }
+                            } else {
+                                player2Pieces++;
+                                if (this.getValidMoves(row, col).length > 0) {
+                                    player2HasMoves = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (player1Pieces === 0 || (this.currentPlayer === 1 && !player1HasMoves)) {
+                    this.setMessage('🎉 Blue Spaceships Win! 🎉', true);
+                    return true;
+                }
+                
+                if (player2Pieces === 0 || (this.currentPlayer === 2 && !player2HasMoves)) {
+                    this.setMessage('🎉 Pink Planets Win! 🎉', true);
+                    return true;
+                }
+                
+                return false;
+            }
+
+            updateTurnIndicator() {
+                if (this.currentPlayer === 1) {
+                    this.turnTextElement.textContent = "Pink Planet's Turn";
+                    this.turnPieceElement.className = 'turn-piece player1-turn';
+                } else {
+                    this.turnTextElement.textContent = "Blue Spaceship's Turn";
+                    this.turnPieceElement.className = 'turn-piece player2-turn';
+                }
+            }
+
+            setMessage(text, isWinner = false) {
+                this.messageElement.textContent = text;
+                if (isWinner) {
+                    this.messageElement.classList.add('winner');
+                } else {
+                    this.messageElement.classList.remove('winner');
+                }
+            }
+
+            resetGame() {
+                this.board = this.createInitialBoard();
+                this.currentPlayer = 1;
+                this.selectedPiece = null;
+                this.validMoves = [];
+                this.mustJump = false;
+                this.renderBoard();
+                this.updateTurnIndicator();
+                this.setMessage('Click a pink planet to start your journey!');
+            }
+        }
+
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new SpaceCheckers();
+        });
+    </script>
 </body>
 </html>
