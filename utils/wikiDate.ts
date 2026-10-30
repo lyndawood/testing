@@ -25,3 +25,23 @@ export function formatWikiDate(date: Date): string {
   
   return formatter.format(date);
 }
+
+/**
+ * Format a date as ISO 8601 YYYY-MM-DD for machine interchange.
+ * 
+ * Architecture decision: Use ISO format for data interchange and storage.
+ * This complements formatWikiDate for human display.
+ * 
+ * @param date - The date to format
+ * @returns Formatted date string in ISO format "YYYY-MM-DD" (e.g., "2024-10-30")
+ * 
+ * @example
+ * ```typescript
+ * const date = new Date('2024-10-30T12:00:00Z');
+ * const iso = formatWikiDateISO(date);
+ * // Returns: "2024-10-30"
+ * ```
+ */
+export function formatWikiDateISO(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
