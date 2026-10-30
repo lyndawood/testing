@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forge Coffee - Artisan Coffee & Pastries</title>
+  <style>
+    :root {
+      /* Light mode colors */
+      --color-bg: #faf8f5;
+      --color-surface: #ffffff;
+      --color-surface-hover: #f5f3f0;
+      --color-text: #2d2520;
+      --color-text-secondary: #6b5d54;
+      --color-primary: #8b4513;
+      --color-primary-dark: #6b3410;
+      --color-accent: #d4a574;
+      --color-border: #e5ddd5;
+      --color-shadow: rgba(45, 37, 32, 0.1);
+      --color-shadow-hover: rgba(45, 37, 32, 0.15);
+      
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      
+      /* Typography */
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-display: Georgia, 'Times New Roman', serif;
+      
+      /* Transitions */
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #1a1512;
+        --color-surface: #2d2520;
+        --color-surface-hover: #3a3128;
+        --color-text: #f5f3f0;
+        --color-text-secondary: #b8aca0;
+        --color-primary: #d4a574;
+        --color-primary-dark: #b8936a;
+        --color-accent: #8b4513;
+        --color-border: #3a3128;
+        --color-shadow: rgba(0, 0, 0, 0.3);
+        --color-shadow-hover: rgba(0, 0, 0, 0.4);
+      }
+    }
+    
+    [data-theme="light"] {
+      --color-bg: #faf8f5;
+      --color-surface: #ffffff;
+      --color-surface-hover: #f5f3f0;
+      --color-text: #2d2520;
+      --color-text-secondary: #6b5d54;
+      --color-primary: #8b4513;
+      --color-primary-dark: #6b3410;
+      --color-accent: #d4a574;
+      --color-border: #e5ddd5;
+      --color-shadow: rgba(45, 37, 32, 0.1);
+      --color-shadow-hover: rgba(45, 37, 32, 0.15);
+    }
+    
+    [data-theme="dark"] {
+      --color-bg: #1a1512;
+      --color-surface: #2d2520;
+      --color-surface-hover: #3a3128;
+      --color-text: #f5f3f0;
+      --color-text-secondary: #b8aca0;
+      --color-primary: #d4a574;
+      --color-primary-dark: #b8936a;
+      --color-accent: #8b4513;
+      --color-border: #3a3128;
+      --color-shadow: rgba(0, 0, 0, 0.3);
+      --color-shadow-hover: rgba(0, 0, 0, 0.4);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      transition: background-color var(--transition-base), color var(--transition-base);
+    }
+    
+    /* Header */
+    .header {
+      background-color: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background-color var(--transition-base), border-color var(--transition-base);
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      font-family: var(--font-display);
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+    
+    .logo-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: block;
+    }
+    
+    .theme-toggle {
+      background: none;
+      border: 2px solid var(--color-border);
+      border-radius: 24px;
+      padding: var(--space-sm) var(--space-md);
+      cursor: pointer;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.875rem;
+      transition: all var(--transition-fast);
+    }
+    
+    .theme-toggle:hover {
+      border-color: var(--color-primary);
+      background-color: var(--color-surface-hover);
+    }
+    
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: var(--color-surface);
+      padding: var(--space-3xl) var(--space-xl);
+      text-align: center;
+    }
+    
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: var(--space-lg);
+      line-height: 1.2;
+    }
+    
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+    }
+    
+    .section {
+      margin-bottom: var(--space-3xl);
+    }
+    
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      margin-bottom: var(--space-xl);
+      text-align: center;
+      color: var(--color-primary);
+    }
+    
+    /* Menu Controls */
+    .menu-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      align-items: center;
+    }
+    
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: var(--space-md) var(--space-md) var(--space-md) 2.75rem;
+      border: 2px solid var(--color-border);
+      border-radius: 12px;
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      font-size: 1rem;
+      transition: all var(--transition-fast);
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-shadow);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: var(--space-md);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-secondary);
+      pointer-events: none;
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: var(--space-sm) var(--space-lg);
+      border: 2px solid var(--color-border);
+      border-radius: 24px;
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+    
+    .filter-btn:hover {
+      border-color: var(--color-primary);
+      background-color: var(--color-surface-hover);
+    }
+    
+    .filter-btn.active {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-surface);
+    }
+    
+    .filter-btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    
+    /* Menu Grid */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-xl);
+    }
+    
+    .menu-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: var(--space-xl);
+      box-shadow: 0 2px 8px var(--color-shadow);
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .menu-card:hover {
+      box-shadow: 0 8px 24px var(--color-shadow-hover);
+      transform: translateY(-2px);
+    }
+    
+    .menu-card.hidden {
+      display: none;
+    }
+    
+    .menu-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: var(--space-md);
+      gap: var(--space-md);
+    }
+    
+    .menu-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      margin-bottom: var(--space-xs);
+    }
+    
+    .menu-card-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      white-space: nowrap;
+    }
+    
+    .menu-card-description {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-lg);
+      line-height: 1.6;
+    }
+    
+    .menu-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .tag {
+      padding: var(--space-xs) var(--space-md);
+      background-color: var(--color-accent);
+      color: var(--color-surface);
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .ingredients-toggle {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      cursor: pointer;
+      padding: var(--space-sm) 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      transition: color var(--transition-fast);
+      margin-top: auto;
+    }
+    
+    .ingredients-toggle:hover {
+      color: var(--color-primary-dark);
+    }
+    
+    .ingredients-toggle:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    
+    .chevron {
+      transition: transform var(--transition-base);
+    }
+    
+    .ingredients-toggle[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+    
+    .ingredients-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-base);
+    }
+    
+    .ingredients-content.expanded {
+      max-height: 500px;
+      margin-top: var(--space-md);
+    }
+    
+    .ingredients-list {
+      list-style: none;
+      padding: var(--space-md);
+      background-color: var(--color-bg);
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+    }
+    
+    .ingredients-list li {
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .ingredients-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .ingredient-name {
+      font-weight: 500;
+    }
+    
+    .ingredient-note {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      font-style: italic;
+    }
+    
+    /* Visit Us Section */
+    .visit-section {
+      background-color: var(--color-surface);
+      border-radius: 16px;
+      padding: var(--space-2xl);
+      box-shadow: 0 4px 16px var(--color-shadow);
+    }
+    
+    .visit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-xl);
+      margin-top: var(--space-xl);
+    }
+    
+    .visit-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    
+    .visit-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    
+    .visit-card-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--color-primary);
+    }
+    
+    .visit-card p {
+      color: var(--color-text-secondary);
+      line-height: 1.8;
+    }
+    
+    .visit-card a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color var(--transition-fast);
+    }
+    
+    .visit-card a:hover {
+      color: var(--color-primary-dark);
+      text-decoration: underline;
+    }
+    
+    .visit-card a:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-xl);
+      text-align: center;
+      color: var(--color-text-secondary);
+      margin-top: var(--space-3xl);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        padding: var(--space-md) var(--space-lg);
+      }
+      
+      .hero {
+        padding: var(--space-2xl) var(--space-lg);
+      }
+      
+      .container {
+        padding: var(--space-xl) var(--space-lg);
+      }
+      
+      .menu-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-box {
+        width: 100%;
+      }
+      
+      .filter-buttons {
+        justify-content: center;
+      }
+      
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .visit-section {
+        padding: var(--space-xl) var(--space-lg);
+      }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="#" class="logo">
+        <img src="public/forge-logo.png" alt="Forge Coffee logo" class="logo-image">
+        <span>Forge Coffee</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span id="themeLabel">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>MID-RUN COFFEE 60</h1>
+      <p>Experience the perfect blend of tradition and innovation. Every cup tells a story, every bite is a moment of joy.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="section" id="menu">
+      <h2 class="section-title">Our Menu</h2>
+      
+      <div class="menu-controls">
+        <div class="search-box">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="search" 
+            id="menuSearch" 
+            placeholder="Search menu items..." 
+            aria-label="Search menu items"
+          />
+        </div>
+        
+        <div class="filter-buttons" role="group" aria-label="Filter menu by category">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="coffee">Coffee</button>
+          <button class="filter-btn" data-filter="pastry">Pastries</button>
+          <button class="filter-btn" data-filter="specialty">Specialty</button>
+        </div>
+      </div>
+
+      <div class="menu-grid" id="menuGrid">
+        <!-- Menu items will be populated by JavaScript -->
+      </div>
+    </section>
+
+    <section class="section" id="visit">
+      <h2 class="section-title">Visit Us</h2>
+      <div class="visit-section">
+        <div class="visit-grid">
+          <div class="visit-card">
+            <h3>
+              <svg class="visit-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              Location
+            </h3>
+            <p>
+              123 Artisan Lane<br>
+              Downtown District<br>
+              Portland, OR 97204
+            </p>
+            <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">Get Directions</a>
+          </div>
+
+          <div class="visit-card">
+            <h3>
+              <svg class="visit-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Hours
+            </h3>
+            <p>
+              Monday - Friday: 7:00 AM - 7:00 PM<br>
+              Saturday: 8:00 AM - 8:00 PM<br>
+              Sunday: 8:00 AM - 6:00 PM
+            </p>
+          </div>
+
+          <div class="visit-card">
+            <h3>
+              <svg class="visit-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              Contact
+            </h3>
+            <p>
+              Phone: <a href="tel:+15035551234">(503) 555-1234</a><br>
+              Email: <a href="mailto:hello@forgecoffee.com">hello@forgecoffee.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2024 Forge Coffee. Crafted with passion and precision.</p>
+  </footer>
+
+  <script>
+    // Menu data
+    const menuItems = [
+      {
+        id: 1,
+        name: "Signature Espresso",
+        category: "coffee",
+        price: "$4.50",
+        description: "Our house blend of single-origin Ethiopian and Colombian beans, roasted to perfection. Rich, smooth, and perfectly balanced with notes of dark chocolate and caramel.",
+        tags: ["Hot", "Signature"],
+        ingredients: [
+          { name: "Ethiopian Yirgacheffe beans", note: "Fair trade" },
+          { name: "Colombian Supremo beans", note: "Organic" },
+          { name: "Filtered water", note: "" }
+        ]
+      },
+      {
+        id: 2,
+        name: "Honey Lavender Latte",
+        category: "specialty",
+        price: "$6.25",
+        description: "A delicate fusion of our espresso with steamed milk, local wildflower honey, and a hint of culinary lavender. Topped with a beautiful lavender-infused foam art.",
+        tags: ["Hot", "Specialty", "Local"],
+        ingredients: [
+          { name: "Double espresso", note: "House blend" },
+          { name: "Whole milk", note: "Organic, can substitute" },
+          { name: "Wildflower honey", note: "Local apiary" },
+          { name: "Culinary lavender", note: "Dried flowers" },
+          { name: "Vanilla extract", note: "Pure" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Almond Croissant",
+        category: "pastry",
+        price: "$5.75",
+        description: "Buttery, flaky croissant filled with rich almond cream and topped with sliced almonds and powdered sugar. Baked fresh every morning using traditional French techniques.",
+        tags: ["Pastry", "Fresh Daily"],
+        ingredients: [
+          { name: "Laminated dough", note: "Butter, flour, milk" },
+          { name: "Almond cream", note: "Frangipane" },
+          { name: "Sliced almonds", note: "Toasted" },
+          { name: "Powdered sugar", note: "" },
+          { name: "Almond extract", note: "Pure" }
+        ]
+      },
+      {
+        id: 4,
+        name: "Cold Brew Tonic",
+        category: "specialty",
+        price: "$5.50",
+        description: "Refreshing and effervescent, our smooth cold brew coffee served over ice with premium tonic water, a twist of orange, and a sprig of fresh rosemary.",
+        tags: ["Cold", "Specialty", "Refreshing"],
+        ingredients: [
+          { name: "Cold brew concentrate", note: "24-hour steep" },
+          { name: "Premium tonic water", note: "Fever-Tree" },
+          { name: "Orange peel", note: "Fresh twist" },
+          { name: "Fresh rosemary", note: "Garnish" },
+          { name: "Ice", note: "Filtered water" }
+        ]
+      },
+      {
+        id: 5,
+        name: "Maple Pecan Scone",
+        category: "pastry",
+        price: "$4.95",
+        description: "Tender, buttery scone studded with toasted pecans and drizzled with pure maple glaze. The perfect companion to your morning coffee.",
+        tags: ["Pastry", "Sweet"],
+        ingredients: [
+          { name: "All-purpose flour", note: "Unbleached" },
+          { name: "Butter", note: "European style" },
+          { name: "Heavy cream", note: "" },
+          { name: "Toasted pecans", note: "Chopped" },
+          { name: "Pure maple syrup", note: "Grade A" },
+          { name: "Brown sugar", note: "" }
+        ]
+      },
+      {
+        id: 6,
+        name: "Nitro Cold Brew",
+        category: "coffee",
+        price: "$5.25",
+        description: "Velvety smooth cold brew infused with nitrogen for a creamy, cascading effect. Naturally sweet with a rich, full-bodied flavor and a beautiful foam head.",
+        tags: ["Cold", "Signature"],
+        ingredients: [
+          { name: "Cold brew coffee", note: "House blend" },
+          { name: "Nitrogen gas", note: "Food grade" }
+        ]
+      }
+    ];
+
+    // Theme management
+    const themeToggle = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+    const html = document.documentElement;
+
+    // Initialize theme
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      setTheme(theme);
+    }
+
+    function setTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      themeLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+      localStorage.setItem('theme', theme);
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+
+    // Render menu items
+    function renderMenuItems(items) {
+      const menuGrid = document.getElementById('menuGrid');
+      menuGrid.innerHTML = items.map(item => `
+        <article class="menu-card" data-category="${item.category}" data-name="${item.name.toLowerCase()}">
+          <div class="menu-card-header">
+            <div>
+              <h3>${item.name}</h3>
+              <div class="menu-card-tags">
+                ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+              </div>
+            </div>
+            <div class="menu-card-price">${item.price}</div>
+          </div>
+          <p class="menu-card-description">${item.description}</p>
+          <button 
+            class="ingredients-toggle" 
+            aria-expanded="false" 
+            aria-controls="ingredients-${item.id}"
+            data-item-id="${item.id}"
+          >
+            View Ingredients
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="ingredients-content" id="ingredients-${item.id}">
+            <ul class="ingredients-list">
+              ${item.ingredients.map(ing => `
+                <li>
+                  <span class="ingredient-name">${ing.name}</span>
+                  ${ing.note ? `<span class="ingredient-note">${ing.note}</span>` : ''}
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        </article>
+      `).join('');
+
+      // Add event listeners for ingredient toggles
+      document.querySelectorAll('.ingredients-toggle').forEach(button => {
+        button.addEventListener('click', toggleIngredients);
+      });
+    }
+
+    // Toggle ingredients
+    function toggleIngredients(e) {
+      const button = e.currentTarget;
+      const itemId = button.getAttribute('data-item-id');
+      const content = document.getElementById(`ingredients-${itemId}`);
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      button.setAttribute('aria-expanded', !isExpanded);
+      content.classList.toggle('expanded');
+      button.innerHTML = `
+        ${isExpanded ? 'View' : 'Hide'} Ingredients
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      `;
+    }
+
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    let currentFilter = 'all';
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Update active state
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        // Apply filter
+        currentFilter = button.getAttribute('data-filter');
+        applyFilters();
+      });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('menuSearch');
+    let searchTerm = '';
+
+    searchInput.addEventListener('input', (e) => {
+      searchTerm = e.target.value.toLowerCase();
+      applyFilters();
+    });
+
+    // Apply both search and filter
+    function applyFilters() {
+      const cards = document.querySelectorAll('.menu-card');
+      
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const name = card.getAttribute('data-name');
+        const description = card.querySelector('.menu-card-description').textContent.toLowerCase();
+        
+        const matchesFilter = currentFilter === 'all' || category === currentFilter;
+        const matchesSearch = searchTerm === '' || 
+                             name.includes(searchTerm) || 
+                             description.includes(searchTerm);
+        
+        if (matchesFilter && matchesSearch) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // Initialize
+    initTheme();
+    renderMenuItems(menuItems);
+  </script>
+</body>
+</html>
