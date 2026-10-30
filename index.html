@@ -6,16 +6,15 @@
     <title>Space Checkers</title>
     <style>
         :root {
-            --bg-dark: #0a0e27;
-            --surface: #1a1f3a;
-            --neon-lime: #c4ff00;
-            --neon-cyan: #00d9ff;
-            --neon-orange: #ff6b35;
-            --neon-red: #ff1744;
-            --neon-purple: #b19cd9;
-            --white: #ffffff;
-            --player1: #ff6b35;
-            --player2: #00d9ff;
+            --bg-deep: #0a1a3d;
+            --bg-surface: #1a3a7a;
+            --text-primary: #ffffff;
+            --accent-cyan: #00ff88;
+            --accent-magenta: #ff00ff;
+            --accent-blue: #0088ff;
+            --accent-purple: #6b2d8f;
+            --accent-orange: #ffaa00;
+            --spacing: 16px;
         }
 
         * {
@@ -24,80 +23,120 @@
             box-sizing: border-box;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background: url('luminas_art-new-year-background-3608029_1920.jpg') center/cover no-repeat fixed,
-                        #0a0e27;
-            color: var(--white);
+                        linear-gradient(135deg, #0a1a3d 0%, #1a2a5a 50%, #2a1a4a 100%);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
             position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 26, 61, 0.7), rgba(42, 26, 74, 0.6));
+            pointer-events: none;
+            z-index: 0;
         }
 
+        /* Starfield background */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(10, 14, 39, 0.4);
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent),
+                radial-gradient(1px 1px at 15% 90%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            opacity: 0.4;
+            animation: twinkle 8s ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         .container {
             position: relative;
             z-index: 1;
-            max-width: 900px;
+            max-width: 1200px;
             width: 100%;
         }
 
         header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 700;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 8px;
-            text-shadow: 0 0 30px rgba(0, 217, 255, 0.8),
-                         0 0 60px rgba(196, 255, 0, 0.4);
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5));
         }
 
         .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            letter-spacing: 2px;
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
+            font-weight: 500;
+            opacity: 0.8;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
 
         .game-layout {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 24px;
+            grid-template-columns: 280px 1fr 280px;
+            gap: var(--spacing);
             align-items: start;
         }
 
-        .side-panel {
-            background: rgba(10, 14, 39, 0.85);
-            backdrop-filter: blur(10px);
+        .card {
+            background: linear-gradient(135deg, rgba(26, 58, 122, 0.4), rgba(107, 45, 143, 0.3));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
             padding: 24px;
-            border-radius: 16px;
-            border: 3px solid;
             position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .side-panel::before {
+        .card::before {
             content: '';
             position: absolute;
-            inset: -3px;
-            border-radius: 16px;
-            padding: 3px;
-            background: linear-gradient(135deg, currentColor, transparent);
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.5), rgba(255, 0, 255, 0.3));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
@@ -105,114 +144,100 @@
             pointer-events: none;
         }
 
-        .info-panel {
-            border-color: var(--neon-cyan);
-        }
-
-        .instructions-panel {
-            border-color: var(--neon-purple);
-        }
-
-        .panel-title {
-            font-size: 1.125rem;
+        .side-panel h2 {
+            font-size: 1.25rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-            color: var(--neon-cyan);
-        }
-
-        .instructions-panel .panel-title {
-            color: var(--neon-purple);
-        }
-
-        .turn-indicator {
-            font-size: 1rem;
-            font-weight: 600;
+            letter-spacing: 0.1em;
             margin-bottom: 20px;
+            color: var(--accent-cyan);
+        }
+
+        .info-item {
+            margin-bottom: 16px;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            background: rgba(10, 26, 61, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 136, 255, 0.2);
         }
 
-        .turn-piece {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid currentColor;
-        }
-
-        .player1-turn {
-            background: var(--player1);
-            color: var(--neon-orange);
-            box-shadow: 0 0 15px var(--player1);
-        }
-
-        .player2-turn {
-            background: var(--player2);
-            color: var(--neon-cyan);
-            box-shadow: 0 0 15px var(--player2);
-        }
-
-        .reset-btn {
-            width: 100%;
-            padding: 14px;
-            background: rgba(196, 255, 0, 0.1);
-            border: 2px solid var(--neon-lime);
-            border-radius: 8px;
-            color: var(--neon-lime);
-            font-weight: 700;
+        .info-label {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+            margin-bottom: 4px;
         }
 
-        .reset-btn:hover {
-            background: var(--neon-lime);
-            color: var(--bg-dark);
-            box-shadow: 0 0 20px var(--neon-lime);
-            transform: translateY(-2px);
+        .info-value {
+            font-size: 1.125rem;
+            font-weight: 600;
         }
 
-        .reset-btn:focus {
-            outline: 2px solid var(--neon-cyan);
-            outline-offset: 2px;
+        .player1-color { color: var(--accent-orange); }
+        .player2-color { color: var(--accent-cyan); }
+
+        #message {
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(255, 0, 255, 0.1));
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
 
         .instructions {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             line-height: 1.6;
             opacity: 0.9;
         }
 
-        .instructions p {
+        .instructions h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             margin-bottom: 12px;
+            color: var(--accent-magenta);
         }
 
-        .board-container {
-            display: flex;
-            justify-content: center;
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
         }
 
-        .board {
+        .instructions li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        #board-container {
+            background: linear-gradient(135deg, rgba(26, 58, 122, 0.5), rgba(107, 45, 143, 0.4));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                        inset 0 0 60px rgba(0, 136, 255, 0.1);
+        }
+
+        #board {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            gap: 8px;
-            background: rgba(10, 14, 39, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 24px;
-            border-radius: 16px;
-            border: 4px solid var(--neon-orange);
-            box-shadow: 0 0 40px rgba(255, 107, 53, 0.4),
-                        inset 0 0 60px rgba(255, 107, 53, 0.1);
-            max-width: 600px;
-            width: 100%;
+            gap: 4px;
             aspect-ratio: 1;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .square {
@@ -220,60 +245,48 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
             border-radius: 8px;
-            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
         }
 
         .square.light {
-            background: linear-gradient(135deg, 
-                rgba(177, 156, 217, 0.3) 0%, 
-                rgba(177, 156, 217, 0.15) 100%);
-            border: 2px solid rgba(177, 156, 217, 0.4);
+            background: linear-gradient(135deg, rgba(107, 45, 143, 0.3), rgba(138, 43, 226, 0.2));
         }
 
         .square.dark {
-            background: linear-gradient(135deg, 
-                rgba(0, 217, 255, 0.25) 0%, 
-                rgba(0, 217, 255, 0.1) 100%);
-            border: 2px solid rgba(0, 217, 255, 0.5);
+            background: linear-gradient(135deg, rgba(0, 136, 255, 0.2), rgba(0, 88, 136, 0.3));
+            border: 1px solid rgba(0, 136, 255, 0.2);
         }
 
-        .square::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 30% 30%, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .square:hover::before {
-            opacity: 1;
-        }
-
-        .square.selected {
-            border-color: var(--neon-lime);
-            box-shadow: 0 0 20px var(--neon-lime),
-                        inset 0 0 20px rgba(196, 255, 0, 0.2);
+        .square.dark:hover {
+            background: linear-gradient(135deg, rgba(0, 136, 255, 0.3), rgba(0, 88, 136, 0.4));
+            border-color: rgba(0, 255, 136, 0.4);
             transform: scale(1.05);
         }
 
+        .square.selected {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.4), rgba(0, 200, 100, 0.5)) !important;
+            border: 2px solid var(--accent-cyan) !important;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6),
+                        inset 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
         .square.valid-move {
-            border-color: var(--neon-lime);
-            animation: pulse 1s ease-in-out infinite;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 200, 100, 0.4)) !important;
+            border: 2px solid var(--accent-cyan) !important;
+            animation: pulse 1.5s ease-in-out infinite;
         }
 
         @keyframes pulse {
             0%, 100% { 
-                box-shadow: 0 0 10px var(--neon-lime);
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+                transform: scale(1);
             }
             50% { 
-                box-shadow: 0 0 25px var(--neon-lime);
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.8);
+                transform: scale(1.08);
             }
         }
 
@@ -282,110 +295,111 @@
             height: 70%;
             border-radius: 50%;
             position: relative;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 3px solid;
+            transition: all 0.3s ease;
         }
 
         .piece.player1 {
-            background: radial-gradient(circle at 35% 35%, 
-                rgba(255, 255, 255, 0.4), 
-                var(--player1) 40%, 
-                #d94a1f 100%);
-            border-color: var(--neon-orange);
-            box-shadow: 0 0 15px rgba(255, 107, 53, 0.6),
-                        inset 0 -4px 8px rgba(0, 0, 0, 0.3);
+            background: radial-gradient(circle at 35% 35%, #ffdd88, var(--accent-orange) 60%, #cc6600);
+            border: 2px solid var(--accent-orange);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.6),
+                        inset 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .piece.player2 {
-            background: radial-gradient(circle at 35% 35%, 
-                rgba(255, 255, 255, 0.4), 
-                var(--player2) 40%, 
-                #0099cc 100%);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 217, 255, 0.6),
-                        inset 0 -4px 8px rgba(0, 0, 0, 0.3);
+            background: radial-gradient(circle at 35% 35%, #88ffff, var(--accent-cyan) 60%, #0088aa);
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6),
+                        inset 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .piece:hover {
             transform: scale(1.1);
+            filter: brightness(1.2);
         }
 
         .piece.king::after {
-            content: '★';
+            content: '✦';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            color: var(--white);
-            text-shadow: 0 0 10px currentColor;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
             animation: rotate 4s linear infinite;
         }
 
         @keyframes rotate {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .message {
-            text-align: center;
+        #reset-btn {
+            width: 100%;
             padding: 16px;
-            background: rgba(10, 14, 39, 0.85);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
             border-radius: 12px;
-            border: 2px solid var(--neon-red);
-            margin-top: 24px;
-            font-weight: 600;
-            font-size: 1.125rem;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(255, 23, 68, 0.3);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            margin-top: 20px;
         }
 
-        @media (max-width: 900px) {
+        #reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 255, 136, 0.5);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+        }
+
+        #reset-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1024px) {
             .game-layout {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
 
             .side-panel {
-                padding: 20px;
+                order: 2;
             }
 
-            .board {
-                padding: 16px;
-                gap: 6px;
+            #board-container {
+                order: 1;
+            }
+
+            .instructions {
+                order: 3;
             }
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.75rem;
-                letter-spacing: 2px;
+            body {
+                padding: 12px;
             }
 
-            .board {
-                padding: 12px;
-                gap: 4px;
+            .card {
+                padding: 16px;
+            }
+
+            h1 {
+                letter-spacing: 0.05em;
+            }
+
+            #board {
+                gap: 2px;
             }
 
             .square {
-                border-width: 1px;
-            }
-
-            .piece {
-                border-width: 2px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+                border-radius: 4px;
             }
         }
     </style>
@@ -393,308 +407,363 @@
 <body>
     <div class="container">
         <header>
-            <h1>🌌 Space Checkers 🌌</h1>
-            <p class="subtitle">Cosmic Battle Across the Stars</p>
+            <h1>Space Checkers</h1>
+            <p class="subtitle">Cosmic Battle Arena</p>
         </header>
 
         <div class="game-layout">
-            <div class="side-panel info-panel">
-                <h2 class="panel-title">Game Status</h2>
-                <div class="turn-indicator" id="turnIndicator">
-                    <span class="turn-piece player1-turn"></span>
-                    <span>Orange's Turn</span>
+            <div class="side-panel card">
+                <h2>Game Status</h2>
+                <div class="info-item">
+                    <div class="info-label">Current Turn</div>
+                    <div class="info-value" id="turn-indicator">Player 1</div>
                 </div>
-                <button class="reset-btn" id="resetBtn">New Game</button>
-            </div>
-
-            <div class="board-container">
-                <div class="board" id="board"></div>
-            </div>
-
-            <div class="side-panel instructions-panel">
-                <h2 class="panel-title">How to Play</h2>
-                <div class="instructions">
-                    <p><strong>Move:</strong> Click a piece, then click a valid square to move.</p>
-                    <p><strong>Capture:</strong> Jump over opponent pieces to capture them.</p>
-                    <p><strong>King:</strong> Reach the opposite end to become a king and move in all directions.</p>
-                    <p><strong>Win:</strong> Capture all opponent pieces or block all their moves.</p>
+                <div class="info-item">
+                    <div class="info-label">Player 1 Pieces</div>
+                    <div class="info-value player1-color" id="player1-count">12</div>
                 </div>
+                <div class="info-item">
+                    <div class="info-label">Player 2 Pieces</div>
+                    <div class="info-value player2-color" id="player2-count">12</div>
+                </div>
+                <div role="status" aria-live="polite" id="message">
+                    🌟 Player 1 begins the cosmic battle! 🌟
+                </div>
+                <button id="reset-btn">New Game</button>
             </div>
-        </div>
 
-        <div class="message" id="message" role="status" aria-live="polite">
-            🚀 Orange launches first! Click a piece to begin your cosmic conquest. 🚀
+            <div id="board-container">
+                <div id="board"></div>
+            </div>
+
+            <div class="side-panel card instructions">
+                <h3>Mission Briefing</h3>
+                <ul>
+                    <li>Move diagonally to adjacent dark squares</li>
+                    <li>Jump over enemy pieces to capture them</li>
+                    <li>Chain multiple jumps in one turn</li>
+                    <li>Reach the opposite end to become a King</li>
+                    <li>Kings can move and capture in all diagonal directions</li>
+                    <li>Capture all enemy pieces or block their moves to win</li>
+                </ul>
+            </div>
         </div>
     </div>
 
     <script>
-        const board = document.getElementById('board');
-        const message = document.getElementById('message');
-        const turnIndicator = document.getElementById('turnIndicator');
-        const resetBtn = document.getElementById('resetBtn');
+        const ROWS = 8;
+        const COLS = 8;
+        let board = [];
+        let selectedPiece = null;
+        let currentPlayer = 1;
+        let validMoves = [];
+        let mustCapture = false;
+        let multiJumpInProgress = false;
 
-        let gameState = {
-            board: [],
-            currentPlayer: 1,
-            selectedPiece: null,
-            validMoves: [],
-            mustCapture: false,
-            captureSequence: false
-        };
-
-        function initGame() {
-            gameState.board = Array(8).fill(null).map(() => Array(8).fill(null));
+        function initBoard() {
+            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(null));
             
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < COLS; col++) {
                     if ((row + col) % 2 === 1) {
-                        if (row < 3) {
-                            gameState.board[row][col] = { player: 2, king: false };
-                        } else if (row > 4) {
-                            gameState.board[row][col] = { player: 1, king: false };
-                        }
+                        board[row][col] = { player: 1, king: false };
                     }
                 }
             }
             
-            gameState.currentPlayer = 1;
-            gameState.selectedPiece = null;
-            gameState.validMoves = [];
-            gameState.mustCapture = false;
-            gameState.captureSequence = false;
+            for (let row = 5; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    if ((row + col) % 2 === 1) {
+                        board[row][col] = { player: 2, king: false };
+                    }
+                }
+            }
             
+            currentPlayer = 1;
+            selectedPiece = null;
+            validMoves = [];
+            mustCapture = false;
+            multiJumpInProgress = false;
+            updateMustCapture();
             renderBoard();
-            updateTurnIndicator();
-            message.textContent = '🚀 Orange launches first! Click a piece to begin your cosmic conquest. 🚀';
+            updateStatus();
         }
 
         function renderBoard() {
-            board.innerHTML = '';
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = '';
             
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
                     const square = document.createElement('div');
-                    square.className = 'square ' + ((row + col) % 2 === 0 ? 'light' : 'dark');
+                    square.className = 'square';
+                    square.className += (row + col) % 2 === 0 ? ' light' : ' dark';
                     square.dataset.row = row;
                     square.dataset.col = col;
                     
-                    const piece = gameState.board[row][col];
+                    if (selectedPiece && selectedPiece.row === row && selectedPiece.col === col) {
+                        square.classList.add('selected');
+                    }
+                    
+                    if (validMoves.some(move => move.row === row && move.col === col)) {
+                        square.classList.add('valid-move');
+                    }
+                    
+                    const piece = board[row][col];
                     if (piece) {
-                        const pieceEl = document.createElement('div');
-                        pieceEl.className = `piece player${piece.player}${piece.king ? ' king' : ''}`;
-                        square.appendChild(pieceEl);
+                        const pieceElement = document.createElement('div');
+                        pieceElement.className = `piece player${piece.player}`;
+                        if (piece.king) {
+                            pieceElement.classList.add('king');
+                        }
+                        square.appendChild(pieceElement);
                     }
                     
                     square.addEventListener('click', () => handleSquareClick(row, col));
-                    board.appendChild(square);
+                    boardElement.appendChild(square);
                 }
             }
-            
-            if (gameState.selectedPiece) {
-                const selectedSquare = board.children[gameState.selectedPiece.row * 8 + gameState.selectedPiece.col];
-                selectedSquare.classList.add('selected');
-            }
-            
-            gameState.validMoves.forEach(move => {
-                const square = board.children[move.row * 8 + move.col];
-                square.classList.add('valid-move');
-            });
         }
 
         function handleSquareClick(row, col) {
-            const piece = gameState.board[row][col];
+            const piece = board[row][col];
             
-            if (gameState.selectedPiece) {
-                const validMove = gameState.validMoves.find(m => m.row === row && m.col === col);
-                
+            if (selectedPiece) {
+                const validMove = validMoves.find(move => move.row === row && move.col === col);
                 if (validMove) {
-                    movePiece(gameState.selectedPiece, validMove);
-                } else if (piece && piece.player === gameState.currentPlayer && !gameState.captureSequence) {
-                    selectPiece(row, col);
-                } else {
-                    gameState.selectedPiece = null;
-                    gameState.validMoves = [];
-                    renderBoard();
+                    movePiece(selectedPiece.row, selectedPiece.col, row, col, validMove.captures);
+                    return;
                 }
-            } else if (piece && piece.player === gameState.currentPlayer) {
-                selectPiece(row, col);
-            }
-        }
-
-        function selectPiece(row, col) {
-            gameState.selectedPiece = { row, col };
-            gameState.validMoves = getValidMoves(row, col);
-            
-            if (gameState.mustCapture) {
-                gameState.validMoves = gameState.validMoves.filter(m => m.captured);
             }
             
-            renderBoard();
+            if (piece && piece.player === currentPlayer) {
+                selectedPiece = { row, col };
+                validMoves = getValidMoves(row, col);
+                renderBoard();
+            } else {
+                selectedPiece = null;
+                validMoves = [];
+                renderBoard();
+            }
         }
 
         function getValidMoves(row, col) {
-            const piece = gameState.board[row][col];
-            const moves = [];
-            const directions = piece.king ? 
-                [[-1, -1], [-1, 1], [1, -1], [1, 1]] :
-                piece.player === 1 ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+            const piece = board[row][col];
+            if (!piece || piece.player !== currentPlayer) return [];
             
-            directions.forEach(([dr, dc]) => {
-                const newRow = row + dr;
-                const newCol = col + dc;
+            const moves = [];
+            const directions = piece.king 
+                ? [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+                : piece.player === 1 
+                    ? [[1, -1], [1, 1]]
+                    : [[-1, -1], [-1, 1]];
+            
+            for (const [dRow, dCol] of directions) {
+                const newRow = row + dRow;
+                const newCol = col + dCol;
                 
-                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-                    if (!gameState.board[newRow][newCol]) {
-                        moves.push({ row: newRow, col: newCol, captured: null });
-                    } else if (gameState.board[newRow][newCol].player !== piece.player) {
-                        const jumpRow = newRow + dr;
-                        const jumpCol = newCol + dc;
-                        
-                        if (jumpRow >= 0 && jumpRow < 8 && jumpCol >= 0 && jumpCol < 8 && 
-                            !gameState.board[jumpRow][jumpCol]) {
-                            moves.push({ 
-                                row: jumpRow, 
-                                col: jumpCol, 
-                                captured: { row: newRow, col: newCol }
-                            });
-                        }
+                if (isValidPosition(newRow, newCol) && !board[newRow][newCol]) {
+                    if (!mustCapture && !multiJumpInProgress) {
+                        moves.push({ row: newRow, col: newCol, captures: [] });
                     }
                 }
-            });
+                
+                const jumpRow = row + dRow * 2;
+                const jumpCol = col + dCol * 2;
+                
+                if (isValidPosition(jumpRow, jumpCol) && 
+                    isValidPosition(newRow, newCol) &&
+                    board[newRow][newCol] && 
+                    board[newRow][newCol].player !== currentPlayer &&
+                    !board[jumpRow][jumpCol]) {
+                    moves.push({ 
+                        row: jumpRow, 
+                        col: jumpCol, 
+                        captures: [{ row: newRow, col: newCol }] 
+                    });
+                }
+            }
+            
+            if (mustCapture || multiJumpInProgress) {
+                return moves.filter(move => move.captures.length > 0);
+            }
             
             return moves;
         }
 
-        function movePiece(from, to) {
-            const piece = gameState.board[from.row][from.col];
-            gameState.board[to.row][to.col] = piece;
-            gameState.board[from.row][from.col] = null;
-            
-            let capturedThisTurn = false;
-            
-            if (to.captured) {
-                gameState.board[to.captured.row][to.captured.col] = null;
-                capturedThisTurn = true;
-                
-                const additionalCaptures = getValidMoves(to.row, to.col).filter(m => m.captured);
-                
-                if (additionalCaptures.length > 0) {
-                    gameState.selectedPiece = { row: to.row, col: to.col };
-                    gameState.validMoves = additionalCaptures;
-                    gameState.captureSequence = true;
-                    message.textContent = '⚡ Multi-jump available! Continue your assault! ⚡';
-                    renderBoard();
-                    return;
-                }
-            }
-            
-            if ((piece.player === 1 && to.row === 0) || (piece.player === 2 && to.row === 7)) {
-                if (!piece.king) {
-                    piece.king = true;
-                    message.textContent = '✦ COSMIC KING ASCENSION! ✦';
-                    setTimeout(() => {
-                        finishTurn();
-                    }, 1500);
-                    renderBoard();
-                    return;
-                }
-            }
-            
-            finishTurn();
+        function isValidPosition(row, col) {
+            return row >= 0 && row < ROWS && col >= 0 && col < COLS;
         }
 
-        function finishTurn() {
-            gameState.selectedPiece = null;
-            gameState.validMoves = [];
-            gameState.captureSequence = false;
-            gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+        function movePiece(fromRow, fromCol, toRow, toCol, captures) {
+            const piece = board[fromRow][fromCol];
+            board[toRow][toCol] = piece;
+            board[fromRow][fromCol] = null;
             
-            checkForcedCaptures();
+            if (captures && captures.length > 0) {
+                captures.forEach(cap => {
+                    board[cap.row][cap.col] = null;
+                });
+                
+                const furtherCaptures = getValidMoves(toRow, toCol).filter(move => move.captures.length > 0);
+                if (furtherCaptures.length > 0) {
+                    selectedPiece = { row: toRow, col: toCol };
+                    validMoves = furtherCaptures;
+                    multiJumpInProgress = true;
+                    renderBoard();
+                    updateStatus();
+                    showMessage('⚡ Multi-jump combo! Continue your assault! ⚡');
+                    return;
+                }
+            }
             
-            if (checkWinCondition()) {
+            if ((piece.player === 1 && toRow === ROWS - 1) || 
+                (piece.player === 2 && toRow === 0)) {
+                if (!piece.king) {
+                    piece.king = true;
+                    showMessage('✦ COSMIC KING ASCENSION! ✦');
+                }
+            }
+            
+            selectedPiece = null;
+            validMoves = [];
+            multiJumpInProgress = false;
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateMustCapture();
+            
+            if (checkWin()) {
                 return;
             }
             
-            updateTurnIndicator();
             renderBoard();
-            
-            if (gameState.mustCapture) {
-                message.textContent = '⚔️ Mandatory strike! Capture an enemy vessel! ⚔️';
-            } else {
-                const playerName = gameState.currentPlayer === 1 ? 'Orange' : 'Cyan';
-                message.textContent = `${gameState.currentPlayer === 1 ? '🟠' : '🔵'} ${playerName}'s turn to command the battlefield!`;
-            }
+            updateStatus();
         }
 
-        function checkForcedCaptures() {
-            let hasCaptures = false;
-            
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
-                    const piece = gameState.board[row][col];
-                    if (piece && piece.player === gameState.currentPlayer) {
-                        const moves = getValidMoves(row, col);
-                        if (moves.some(m => m.captured)) {
-                            hasCaptures = true;
-                            break;
+        function updateMustCapture() {
+            mustCapture = false;
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece && piece.player === currentPlayer) {
+                        const moves = getValidMovesForCapture(row, col);
+                        if (moves.some(move => move.captures.length > 0)) {
+                            mustCapture = true;
+                            return;
                         }
                     }
                 }
-                if (hasCaptures) break;
             }
-            
-            gameState.mustCapture = hasCaptures;
         }
 
-        function checkWinCondition() {
+        function getValidMovesForCapture(row, col) {
+            const piece = board[row][col];
+            if (!piece) return [];
+            
+            const moves = [];
+            const directions = piece.king 
+                ? [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+                : piece.player === 1 
+                    ? [[1, -1], [1, 1]]
+                    : [[-1, -1], [-1, 1]];
+            
+            for (const [dRow, dCol] of directions) {
+                const newRow = row + dRow;
+                const newCol = col + dCol;
+                const jumpRow = row + dRow * 2;
+                const jumpCol = col + dCol * 2;
+                
+                if (isValidPosition(jumpRow, jumpCol) && 
+                    isValidPosition(newRow, newCol) &&
+                    board[newRow][newCol] && 
+                    board[newRow][newCol].player !== piece.player &&
+                    !board[jumpRow][jumpCol]) {
+                    moves.push({ 
+                        row: jumpRow, 
+                        col: jumpCol, 
+                        captures: [{ row: newRow, col: newCol }] 
+                    });
+                }
+            }
+            
+            return moves;
+        }
+
+        function checkWin() {
             let player1Pieces = 0;
             let player2Pieces = 0;
-            let player1Moves = 0;
-            let player2Moves = 0;
+            let player1HasMoves = false;
+            let player2HasMoves = false;
             
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
-                    const piece = gameState.board[row][col];
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
                     if (piece) {
                         if (piece.player === 1) {
                             player1Pieces++;
-                            if (getValidMoves(row, col).length > 0) player1Moves++;
+                            if (getValidMovesForCapture(row, col).length > 0 || 
+                                (!mustCapture && getValidMoves(row, col).length > 0)) {
+                                player1HasMoves = true;
+                            }
                         } else {
                             player2Pieces++;
-                            if (getValidMoves(row, col).length > 0) player2Moves++;
+                            if (getValidMovesForCapture(row, col).length > 0 || 
+                                (!mustCapture && getValidMoves(row, col).length > 0)) {
+                                player2HasMoves = true;
+                            }
                         }
                     }
                 }
             }
             
-            if (player1Pieces === 0 || (gameState.currentPlayer === 1 && player1Moves === 0)) {
-                message.textContent = '🔵 VICTORY! Cyan dominates the galaxy! 🔵';
-                gameState.currentPlayer = 0;
+            if (player1Pieces === 0 || !player1HasMoves) {
+                showMessage('🚀 VICTORY! Player 2 Dominates the Galaxy! 🚀');
                 return true;
             }
             
-            if (player2Pieces === 0 || (gameState.currentPlayer === 2 && player2Moves === 0)) {
-                message.textContent = '🟠 VICTORY! Orange conquers the cosmos! 🟠';
-                gameState.currentPlayer = 0;
+            if (player2Pieces === 0 || !player2HasMoves) {
+                showMessage('🌟 VICTORY! Player 1 Conquers the Cosmos! 🌟');
                 return true;
             }
             
             return false;
         }
 
-        function updateTurnIndicator() {
-            if (gameState.currentPlayer === 1) {
-                turnIndicator.innerHTML = '<span class="turn-piece player1-turn"></span><span>Orange\'s Turn</span>';
-            } else if (gameState.currentPlayer === 2) {
-                turnIndicator.innerHTML = '<span class="turn-piece player2-turn"></span><span>Cyan\'s Turn</span>';
-            } else {
-                turnIndicator.innerHTML = '<span>Game Over</span>';
+        function updateStatus() {
+            const turnIndicator = document.getElementById('turn-indicator');
+            turnIndicator.textContent = `Player ${currentPlayer}`;
+            turnIndicator.className = `info-value player${currentPlayer}-color`;
+            
+            let player1Count = 0;
+            let player2Count = 0;
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece) {
+                        if (piece.player === 1) player1Count++;
+                        else player2Count++;
+                    }
+                }
+            }
+            
+            document.getElementById('player1-count').textContent = player1Count;
+            document.getElementById('player2-count').textContent = player2Count;
+            
+            if (!multiJumpInProgress) {
+                if (mustCapture) {
+                    showMessage('⚔️ Mandatory strike! Capture an enemy vessel! ⚔️');
+                } else {
+                    showMessage(`🌟 Player ${currentPlayer}'s turn to command the fleet! 🌟`);
+                }
             }
         }
 
-        resetBtn.addEventListener('click', initGame);
+        function showMessage(text) {
+            document.getElementById('message').textContent = text;
+        }
 
-        initGame();
+        document.getElementById('reset-btn').addEventListener('click', initBoard);
+
+        initBoard();
     </script>
 </body>
 </html>
