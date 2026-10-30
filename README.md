@@ -11,12 +11,13 @@ Normalize input text into a display label for wiki snapshots:
 ```typescript
 import { wikiSnapshotLabel } from './utils/wikiSnapshotLabel.js';
 
-wikiSnapshotLabel('  Hello   World  '); // 'Hello World'
-wikiSnapshotLabel('Café\u00A0Menu');    // 'Café Menu'
-wikiSnapshotLabel('日本語　テキスト');   // '日本語 テキスト'
+wikiSnapshotLabel('  Hello   World  ');        // 'Hello World'
+wikiSnapshotLabel('Café\\u00A0Menu');           // 'Café Menu'
+wikiSnapshotLabel('日本語　テキスト');          // '日本語 テキスト'
+wikiSnapshotLabel('A very long label...', 10); // 'A very lon'
 ```
 
-Uses NFKC normalization to produce canonical Unicode text, trims whitespace, and collapses runs of whitespace to single spaces while preserving all Unicode characters.
+Uses NFKC normalization to produce canonical Unicode text, trims whitespace, and collapses runs of whitespace to single spaces while preserving all Unicode characters. Truncates to `maxLength` Unicode code points (default: 96, not UTF-16 code units) and trims the result.
 
 **Note:** The output is display text, not a safe filename. Use `wikiRetestSlug` for URL-safe slugs.
 
