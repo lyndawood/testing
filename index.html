@@ -3,10 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merge preview validation</title>
+    <title>Forge Polish Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-dark: #1e40af;
+            --color-bg: #ffffff;
+            --color-bg-secondary: #f3f4f6;
+            --color-text: #1f2937;
+            --color-text-light: #6b7280;
+            --spacing-unit: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg: #111827;
+                --color-bg-secondary: #1f2937;
+                --color-text: #f3f4f6;
+                --color-text-light: #d1d5db;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: calc(var(--spacing-unit) * 4);
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--color-text-light);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            font-weight: 500;
+        }
+
+        .accent {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: calc(var(--spacing-unit) * 6);
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 6);
+            background-color: var(--color-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .cta-button:focus {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Main preview E2E b9d14df</h1>
-    <p>Merged through Forge PR 49 validation</p>
+    <main>
+        <div class="container">
+            <h1>Forge <span class="accent">Polish</span> Test</h1>
+            <p class="subtitle">Forge polish tested with Node.js</p>
+            <p class="description">
+                This project demonstrates the fundamentals of testing using Node.js built-in test runner and assertion library. Explore the code to see how to write clean, effective tests.
+            </p>
+            <a href="#" class="cta-button">Learn More</a>
+        </div>
+    </main>
 </body>
 </html>
