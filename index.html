@@ -413,7 +413,6 @@
                         square.className = `square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
                         square.dataset.row = row;
                         square.dataset.col = col;
-                        square.setAttribute('aria-label', `Square ${String.fromCharCode(65 + col)}${8 - row}`);
                         
                         square.addEventListener('click', () => this.handleSquareClick(row, col));
                         
@@ -438,9 +437,6 @@
                     if (piece) {
                         const pieceElement = document.createElement('div');
                         pieceElement.className = `piece player${piece.player}${piece.king ? ' king' : ''}`;
-                        pieceElement.setAttribute('role', 'button');
-                        pieceElement.setAttribute('aria-label', 
-                            `${piece.player === 1 ? 'Pink' : 'Blue'} ${piece.king ? 'king' : 'piece'}`);
                         square.appendChild(pieceElement);
                     }
                     
