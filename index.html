@@ -27,7 +27,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--space-dark);
+            background: radial-gradient(ellipse at 50% 0%, rgba(74, 20, 140, 0.3), transparent 50%),
+                        radial-gradient(ellipse at 0% 50%, rgba(0, 188, 212, 0.2), transparent 50%),
+                        radial-gradient(ellipse at 100% 100%, rgba(194, 24, 91, 0.2), transparent 50%),
+                        var(--space-dark);
             color: var(--star-white);
             min-height: 100vh;
             display: flex;
@@ -46,17 +49,38 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(2px 2px at 20% 30%, white, transparent),
-                radial-gradient(2px 2px at 60% 70%, white, transparent),
-                radial-gradient(1px 1px at 50% 50%, white, transparent),
-                radial-gradient(1px 1px at 80% 10%, white, transparent),
-                radial-gradient(2px 2px at 90% 60%, white, transparent),
-                radial-gradient(1px 1px at 33% 80%, white, transparent),
-                radial-gradient(1px 1px at 15% 90%, white, transparent);
+            background-image: 
+                radial-gradient(1px 1px at 10% 20%, white, transparent),
+                radial-gradient(1.5px 1.5px at 25% 35%, #ffccff, transparent),
+                radial-gradient(1px 1px at 40% 15%, white, transparent),
+                radial-gradient(2px 2px at 55% 45%, #ccffff, transparent),
+                radial-gradient(1px 1px at 70% 25%, white, transparent),
+                radial-gradient(1.5px 1.5px at 85% 60%, #ffccff, transparent),
+                radial-gradient(1px 1px at 15% 75%, white, transparent),
+                radial-gradient(2px 2px at 50% 80%, #ccffff, transparent),
+                radial-gradient(1px 1px at 80% 85%, white, transparent),
+                radial-gradient(1.5px 1.5px at 30% 60%, #ffccff, transparent),
+                radial-gradient(1px 1px at 65% 70%, white, transparent),
+                radial-gradient(2px 2px at 20% 45%, #ccffff, transparent);
             background-size: 200% 200%;
             background-position: 0% 0%;
-            animation: stars 200s linear infinite;
+            animation: stars 300s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 30%, rgba(194, 24, 91, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 70%, rgba(0, 188, 212, 0.15), transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(74, 20, 140, 0.1), transparent 40%);
+            animation: nebula 20s ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
         }
@@ -64,6 +88,11 @@
         @keyframes stars {
             from { background-position: 0% 0%; }
             to { background-position: 100% 100%; }
+        }
+
+        @keyframes nebula {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         .container {
@@ -76,17 +105,39 @@
         header {
             text-align: center;
             margin-bottom: 24px;
+            position: relative;
+        }
+
+        header::before {
+            content: '🌌';
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 8px;
+            animation: float 4s ease-in-out infinite;
         }
 
         h1 {
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
-            background: linear-gradient(135deg, var(--nebula-pink), var(--nebula-cyan));
+            background: linear-gradient(135deg, var(--nebula-pink), var(--nebula-cyan), var(--nebula-pink));
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px;
             letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(194, 24, 91, 0.3);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(194, 24, 91, 0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(0, 188, 212, 0.5)); }
         }
 
         .game-info {
@@ -95,10 +146,11 @@
             align-items: center;
             margin-bottom: 16px;
             padding: 16px;
-            background: rgba(26, 42, 108, 0.4);
+            background: linear-gradient(135deg, rgba(26, 42, 108, 0.5), rgba(74, 20, 140, 0.3));
             border-radius: 12px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 188, 212, 0.4);
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.2);
         }
 
         .turn-indicator {
@@ -107,6 +159,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .turn-piece {
@@ -117,30 +170,38 @@
         }
 
         .player1-turn {
-            background: var(--player1);
-            box-shadow: 0 0 12px var(--player1);
+            background: radial-gradient(circle at 35% 35%, #ff9ec5, var(--player1));
+            box-shadow: 0 0 16px var(--player1), 0 0 32px rgba(255, 107, 157, 0.5);
+            animation: pulse-turn 1.5s ease-in-out infinite;
         }
 
         .player2-turn {
-            background: var(--player2);
-            box-shadow: 0 0 12px var(--player2);
+            background: radial-gradient(circle at 35% 35%, #80deea, var(--player2));
+            box-shadow: 0 0 16px var(--player2), 0 0 32px rgba(79, 195, 247, 0.5);
+            animation: pulse-turn 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-turn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         .reset-btn {
             padding: 12px 24px;
             background: linear-gradient(135deg, var(--nebula-pink), var(--space-purple));
-            border: none;
+            border: 2px solid rgba(0, 188, 212, 0.4);
             border-radius: 8px;
             color: white;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             font-size: 1rem;
+            box-shadow: 0 0 20px rgba(194, 24, 91, 0.3);
         }
 
         .reset-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(194, 24, 91, 0.4);
+            box-shadow: 0 0 30px rgba(194, 24, 91, 0.5), 0 4px 12px rgba(194, 24, 91, 0.4);
         }
 
         .reset-btn:active {
@@ -156,19 +217,40 @@
             display: flex;
             justify-content: center;
             margin-bottom: 24px;
+            position: relative;
+        }
+
+        .board-container::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle, rgba(194, 24, 91, 0.2), transparent 70%);
+            border-radius: 20px;
+            animation: pulse-glow 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         .board {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
             gap: 2px;
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(26, 42, 108, 0.6), rgba(74, 20, 140, 0.4));
             padding: 8px;
             border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 40px rgba(194, 24, 91, 0.3),
+                        0 0 60px rgba(0, 188, 212, 0.2),
+                        inset 0 0 30px rgba(255, 255, 255, 0.05);
             max-width: 600px;
             width: 100%;
             aspect-ratio: 1;
+            position: relative;
+            z-index: 1;
+            border: 2px solid rgba(0, 188, 212, 0.3);
         }
 
         .square {
@@ -183,30 +265,32 @@
         }
 
         .square.light {
-            background: var(--board-light);
+            background: linear-gradient(135deg, rgba(45, 53, 97, 0.8), rgba(26, 31, 58, 0.6));
         }
 
         .square.dark {
-            background: var(--board-dark);
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.9), rgba(10, 14, 39, 0.8));
         }
 
         .square.selected {
-            background: var(--highlight);
-            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.4);
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.6), rgba(255, 215, 0, 0.2));
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
         .square.valid-move {
-            background: rgba(0, 255, 136, 0.3);
+            background: rgba(0, 255, 136, 0.2);
             cursor: pointer;
+            box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.3);
         }
 
         .square.valid-move::after {
             content: '';
             width: 30%;
             height: 30%;
-            background: rgba(0, 255, 136, 0.6);
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.8), rgba(0, 255, 136, 0.3));
             border-radius: 50%;
             animation: pulse 1s infinite;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
         }
 
         @keyframes pulse {
@@ -224,31 +308,63 @@
             transition: transform 0.2s;
             cursor: pointer;
             position: relative;
+            font-size: 1.8em;
         }
 
         .piece:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
 
         .piece.player1 {
-            background: radial-gradient(circle at 30% 30%, var(--player1), #d81b60);
-            box-shadow: 0 4px 8px rgba(255, 107, 157, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            background: radial-gradient(circle at 35% 35%, #ff9ec5, var(--player1), #d81b60);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.6),
+                        0 0 40px rgba(255, 107, 157, 0.3),
+                        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+            animation: planet-glow 2s ease-in-out infinite;
         }
 
         .piece.player2 {
-            background: radial-gradient(circle at 30% 30%, var(--player2), #0288d1);
-            box-shadow: 0 4px 8px rgba(79, 195, 247, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            background: radial-gradient(circle at 35% 35%, #80deea, var(--player2), #0288d1);
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.6),
+                        0 0 40px rgba(79, 195, 247, 0.3),
+                        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+            animation: spaceship-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes planet-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 157, 0.6),
+                                   0 0 40px rgba(255, 107, 157, 0.3),
+                                   inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                                   inset 0 -2px 4px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 107, 157, 0.8),
+                             0 0 60px rgba(255, 107, 157, 0.5),
+                             inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                             inset 0 -2px 4px rgba(0, 0, 0, 0.3); }
+        }
+
+        @keyframes spaceship-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(79, 195, 247, 0.6),
+                                   0 0 40px rgba(79, 195, 247, 0.3),
+                                   inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                                   inset 0 -2px 4px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(79, 195, 247, 0.8),
+                             0 0 60px rgba(79, 195, 247, 0.5),
+                             inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                             inset 0 -2px 4px rgba(0, 0, 0, 0.3); }
         }
 
         .piece.king::after {
-            content: '★';
-            font-size: 1.5em;
+            content: '✦';
+            font-size: 1.2em;
             color: var(--highlight);
-            text-shadow: 0 0 8px var(--highlight);
-            animation: rotate 4s linear infinite;
+            text-shadow: 0 0 12px var(--highlight),
+                         0 0 24px rgba(255, 215, 0, 0.6);
+            animation: spin-star 3s linear infinite;
         }
 
-        @keyframes rotate {
+        @keyframes spin-star {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
@@ -256,32 +372,42 @@
         .message {
             text-align: center;
             padding: 16px;
-            background: rgba(26, 42, 108, 0.4);
+            background: linear-gradient(135deg, rgba(26, 42, 108, 0.5), rgba(74, 20, 140, 0.3));
             border-radius: 12px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 188, 212, 0.3);
             font-size: 1.125rem;
             min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.2);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .message.winner {
-            background: linear-gradient(135deg, rgba(194, 24, 91, 0.4), rgba(74, 20, 140, 0.4));
+            background: linear-gradient(135deg, rgba(194, 24, 91, 0.5), rgba(74, 20, 140, 0.5));
             border: 2px solid var(--highlight);
             font-weight: 600;
             font-size: 1.25rem;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), 0 0 20px rgba(194, 24, 91, 0.4);
+            animation: winner-pulse 0.6s ease-in-out;
+        }
+
+        @keyframes winner-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .instructions {
             margin-top: 24px;
             padding: 16px;
-            background: rgba(26, 42, 108, 0.3);
+            background: linear-gradient(135deg, rgba(26, 42, 108, 0.4), rgba(74, 20, 140, 0.2));
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 188, 212, 0.2);
             font-size: 0.875rem;
             line-height: 1.6;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.15);
         }
 
         .instructions h2 {
@@ -336,7 +462,7 @@
 
         <div class="game-info">
             <div class="turn-indicator">
-                <span id="turn-text">Pink Planet's Turn</span>
+                <span id="turn-text">🌸 Pink Planet's Turn</span>
                 <span class="turn-piece player1-turn" id="turn-piece"></span>
             </div>
             <button class="reset-btn" id="reset-btn" aria-label="Reset game">New Game</button>
@@ -347,16 +473,16 @@
         </div>
 
         <div class="message" id="message" role="status" aria-live="polite">
-            Click a pink planet to start your journey!
+            🌟 Launch your Pink Planet into the cosmic battlefield! 🌟
         </div>
 
         <div class="instructions">
-            <h2>How to Play</h2>
+            <h2>🚀 Mission Briefing</h2>
             <ul>
-                <li>Click a piece to select it, then click a highlighted square to move</li>
-                <li>Jump over opponent pieces to capture them</li>
-                <li>Reach the opposite end to become a King (★) and move backwards</li>
-                <li>Capture all opponent pieces to win!</li>
+                <li>Select your cosmic piece and navigate to a glowing destination</li>
+                <li>Jump over enemy forces to capture them in your gravitational pull</li>
+                <li>Reach the far edge of space to become a King (✦) with omnidirectional powers</li>
+                <li>Eliminate all enemy vessels or block their movement to claim victory!</li>
             </ul>
         </div>
     </div>
@@ -481,9 +607,9 @@
                 this.renderBoard();
                 
                 if (this.validMoves.length === 0) {
-                    this.setMessage('No valid moves for this piece. Try another!');
+                    this.setMessage('⚠️ This vessel is trapped! Select another! ⚠️');
                 } else {
-                    this.setMessage(`${this.validMoves.length} move${this.validMoves.length > 1 ? 's' : ''} available`);
+                    this.setMessage(`✨ ${this.validMoves.length} trajectory${this.validMoves.length > 1 ? 's' : ''} available ✨`);
                 }
             }
 
@@ -491,7 +617,7 @@
                 this.selectedPiece = null;
                 this.validMoves = [];
                 this.renderBoard();
-                this.setMessage(`${this.currentPlayer === 1 ? 'Pink' : 'Blue'}'s turn`);
+                this.setMessage(`${this.currentPlayer === 1 ? '🌸 Pink Planet' : '🚀 Blue Spaceship'}'s turn`);
             }
 
             getValidMoves(row, col) {
@@ -574,7 +700,7 @@
                         continueTurn = true;
                         this.selectedPiece = { row: toRow, col: toCol };
                         this.validMoves = additionalJumps;
-                        this.setMessage('Multi-jump! Keep going!');
+                        this.setMessage('⚡ Multi-jump combo! Continue your assault! ⚡');
                     }
                 }
                 
@@ -583,7 +709,7 @@
                     if ((piece.player === 1 && toRow === 7) || 
                         (piece.player === 2 && toRow === 0)) {
                         piece.king = true;
-                        this.setMessage('👑 Promoted to King! 👑');
+                        this.setMessage('✦ COSMIC KING ASCENSION! ✦');
                         setTimeout(() => {
                             if (!this.checkWinner()) {
                                 this.setMessage(`${this.currentPlayer === 1 ? 'Pink' : 'Blue'}'s turn`);
@@ -610,9 +736,9 @@
                     this.mustJump = this.checkMustJump();
                     
                     if (this.mustJump) {
-                        this.setMessage('You must capture an opponent piece!');
+                        this.setMessage('⚔️ Mandatory strike! Capture an enemy vessel! ⚔️');
                     } else {
-                        this.setMessage(`${this.currentPlayer === 1 ? 'Pink' : 'Blue'}'s turn`);
+                        this.setMessage(`${this.currentPlayer === 1 ? '🌸 Pink Planet' : '🚀 Blue Spaceship'}'s turn`);
                     }
                 }
             }
@@ -658,12 +784,12 @@
                 }
                 
                 if (player1Pieces === 0 || (this.currentPlayer === 1 && !player1HasMoves)) {
-                    this.setMessage('🎉 Blue Spaceships Win! 🎉', true);
+                    this.setMessage('🚀 VICTORY! Blue Spaceships Dominate the Galaxy! 🚀', true);
                     return true;
                 }
                 
                 if (player2Pieces === 0 || (this.currentPlayer === 2 && !player2HasMoves)) {
-                    this.setMessage('🎉 Pink Planets Win! 🎉', true);
+                    this.setMessage('🌸 VICTORY! Pink Planets Rule the Cosmos! 🌸', true);
                     return true;
                 }
                 
@@ -672,10 +798,10 @@
 
             updateTurnIndicator() {
                 if (this.currentPlayer === 1) {
-                    this.turnTextElement.textContent = "Pink Planet's Turn";
+                    this.turnTextElement.textContent = "🌸 Pink Planet's Turn";
                     this.turnPieceElement.className = 'turn-piece player1-turn';
                 } else {
-                    this.turnTextElement.textContent = "Blue Spaceship's Turn";
+                    this.turnTextElement.textContent = "🚀 Blue Spaceship's Turn";
                     this.turnPieceElement.className = 'turn-piece player2-turn';
                 }
             }
@@ -697,7 +823,7 @@
                 this.mustJump = false;
                 this.renderBoard();
                 this.updateTurnIndicator();
-                this.setMessage('Click a pink planet to start your journey!');
+                this.setMessage('🌟 Launch your Pink Planet into the cosmic battlefield! 🌟');
             }
         }
 
