@@ -5,8 +5,12 @@
  * We use built-in Unicode normalization (NFKD) and regexes instead of
  * slug libraries to keep dependencies unchanged and ensure ASCII-only output.
  * 
+ * Stored slugs are bounded to 64 ASCII bytes by default, while callers can
+ * choose a shorter limit by passing maxLength.
+ * 
  * @param text - The text to convert into a slug
- * @returns URL-safe ASCII slug with hyphens separating words
+ * @param maxLength - Maximum length of the slug in ASCII characters (default: 64)
+ * @returns URL-safe ASCII slug with hyphens separating words, truncated to maxLength
  * 
  * @example
  * ```typescript
@@ -21,6 +25,9 @@
  * 
  * wikiRetestSlug('---Edge hyphens---');
  * // Returns: "edge-hyphens"
+ * 
+ * wikiRetestSlug('Very long title that exceeds the default limit', 20);
+ * // Returns: "very-long-title"
  * ```
  * 
  * **Known Limitation**: Non-Latin scripts (Cyrillic, Arabic, CJK, etc.) will
@@ -35,7 +42,7 @@
  * If you need to support non-Latin input, consider using a transliteration
  * library or prepending a Latin prefix to ensure non-empty slugs.
  */
-export function wikiRetestSlug(text: string): string {
+export function wikiRetestSlug(text: string, maxLength: number = 64): string {
   // Step 1: Normalize with NFKD to decompose characters (e.g., é → e + ́)
   const normalized = text.normalize('NFKD');
   
@@ -53,5 +60,9 @@ export function wikiRetestSlug(text: string): string {
   // Step 5: Trim edge hyphens
   const trimmed = withHyphens.replace(/^-+|-+$/g, '');
   
-  return trimmed;
+  // Step 6: Truncate to maxLength and remove any trailing hyphen
+  const truncated = trimmed.slice(0, maxLength);
+  const final = truncated.replace(/-+$/, '');
+  
+  return final;
 }

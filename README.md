@@ -24,6 +24,9 @@ wikiRetestSlug('Multiple   spaces');
 
 wikiRetestSlug('---Edge hyphens---');
 // Returns: "edge-hyphens"
+
+wikiRetestSlug('Very long title that exceeds the default limit', 20);
+// Returns: "very-long-title"
 ```
 
 The function:
@@ -32,6 +35,7 @@ The function:
 3. Converts to lowercase
 4. Replaces runs of non-ASCII letters/digits with single hyphens
 5. Trims edge hyphens
+6. Truncates to maxLength (default: 64) and removes any trailing hyphen
 
 #### Architecture Decision
 
@@ -39,6 +43,8 @@ This utility is intentionally **dependency-free**. It uses built-in Unicode norm
 - Keep dependencies unchanged
 - Ensure ASCII-only output
 - Keep the codebase lightweight
+
+**Stored slugs are bounded to 64 ASCII bytes by default**, while callers can choose a shorter limit by passing the `maxLength` parameter. This ensures consistent slug length limits across wiki pages.
 
 #### Known Limitation
 
