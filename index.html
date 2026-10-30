@@ -3,10 +3,827 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merge preview validation</title>
+    <title>Space Checkers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a1a3d;
+            --bg-surface: #1a3a7a;
+            --text-primary: #ffffff;
+            --accent-cyan: #00ff88;
+            --accent-magenta: #ff00ff;
+            --accent-blue: #0088ff;
+            --accent-purple: #6b2d8f;
+            --accent-orange: #ffaa00;
+            --spacing: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: url('luminas_art-new-year-background-3608029_1920.jpg') center/cover no-repeat fixed,
+                        linear-gradient(135deg, #0a1a3d 0%, #1a2a5a 50%, #2a1a4a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 26, 61, 0.7), rgba(42, 26, 74, 0.6));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent),
+                radial-gradient(1px 1px at 15% 90%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            opacity: 0.4;
+            animation: twinkle 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5));
+        }
+
+        .subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
+            font-weight: 300;
+            opacity: 0.8;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            gap: var(--spacing);
+            align-items: start;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(26, 58, 122, 0.4), rgba(107, 45, 143, 0.3));
+            backdrop-filter: blur(20px);
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.5), rgba(255, 0, 255, 0.3));
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .side-panel h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 20px;
+            color: var(--accent-cyan);
+        }
+
+        .info-item {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(10, 26, 61, 0.5);
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            border: 1px solid rgba(0, 136, 255, 0.2);
+        }
+
+        .info-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .player1-color { color: var(--accent-orange); }
+        .player2-color { color: var(--accent-cyan); }
+
+        #message {
+            font-family: 'Rajdhani', sans-serif;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(255, 0, 255, 0.1));
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .instructions h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+            color: var(--accent-magenta);
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+        }
+
+        #board-container {
+            background: linear-gradient(135deg, rgba(26, 58, 122, 0.5), rgba(107, 45, 143, 0.4));
+            backdrop-filter: blur(20px);
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            border: 1px solid rgba(0, 136, 255, 0.4);
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                        inset 0 0 60px rgba(0, 136, 255, 0.1);
+            position: relative;
+        }
+        
+        #board-container::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            background: linear-gradient(135deg, rgba(0, 136, 255, 0.6), rgba(0, 255, 136, 0.4));
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            aspect-ratio: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .square {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(20% 0, 80% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 80%, 0 20%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .square.light {
+            background: linear-gradient(135deg, rgba(107, 45, 143, 0.3), rgba(138, 43, 226, 0.2));
+        }
+
+        .square.dark {
+            background: linear-gradient(135deg, rgba(0, 136, 255, 0.2), rgba(0, 88, 136, 0.3));
+            border: 1px solid rgba(0, 136, 255, 0.2);
+        }
+
+        .square.dark:hover {
+            background: linear-gradient(135deg, rgba(0, 136, 255, 0.3), rgba(0, 88, 136, 0.4));
+            border-color: rgba(0, 255, 136, 0.4);
+            transform: scale(1.05);
+        }
+
+        .square.selected {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.4), rgba(0, 200, 100, 0.5)) !important;
+            border: 2px solid var(--accent-cyan) !important;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6),
+                        inset 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .square.valid-move {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 200, 100, 0.4)) !important;
+            border: 2px solid var(--accent-cyan) !important;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 25px rgba(0, 255, 136, 0.8);
+                transform: scale(1.08);
+            }
+        }
+
+        .piece {
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .piece.player1 {
+            background: radial-gradient(circle at 35% 35%, #ffdd88, var(--accent-orange) 60%, #cc6600);
+            border: 2px solid var(--accent-orange);
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.6),
+                        inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .piece.player2 {
+            background: radial-gradient(circle at 35% 35%, #88ffff, var(--accent-cyan) 60%, #0088aa);
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6),
+                        inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .piece:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .piece.king::after {
+            content: '✦';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #reset-btn {
+            font-family: 'Orbitron', monospace;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        #reset-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 255, 136, 0.5);
+        }
+        
+        #reset-btn:hover::before {
+            opacity: 1;
+        }
+
+        #reset-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1024px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .side-panel {
+                order: 2;
+            }
+
+            #board-container {
+                order: 1;
+            }
+
+            .instructions {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            h1 {
+                letter-spacing: 0.05em;
+            }
+
+            #board {
+                gap: 2px;
+            }
+
+            .square {
+                border-radius: 4px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Main preview E2E b9d14df</h1>
-    <p>Merged through Forge PR 49 validation</p>
+    <div class="container">
+        <header>
+            <h1>Space Checkers</h1>
+            <p class="subtitle">Cosmic Battle Arena</p>
+        </header>
+
+        <div class="game-layout">
+            <div class="side-panel card">
+                <h2>Game Status</h2>
+                <div class="info-item">
+                    <div class="info-label">Current Turn</div>
+                    <div class="info-value" id="turn-indicator">Player 1</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Player 1 Pieces</div>
+                    <div class="info-value player1-color" id="player1-count">12</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Player 2 Pieces</div>
+                    <div class="info-value player2-color" id="player2-count">12</div>
+                </div>
+                <div role="status" aria-live="polite" id="message">
+                    🌟 Player 1 begins the cosmic battle! 🌟
+                </div>
+                <button id="reset-btn">New Game</button>
+            </div>
+
+            <div id="board-container">
+                <div id="board"></div>
+            </div>
+
+            <div class="side-panel card instructions">
+                <h3>Mission Briefing</h3>
+                <ul>
+                    <li>Move diagonally to adjacent dark squares</li>
+                    <li>Jump over enemy pieces to capture them</li>
+                    <li>Chain multiple jumps in one turn</li>
+                    <li>Reach the opposite end to become a King</li>
+                    <li>Kings can move and capture in all diagonal directions</li>
+                    <li>Capture all enemy pieces or block their moves to win</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ROWS = 8;
+        const COLS = 8;
+        let board = [];
+        let selectedPiece = null;
+        let currentPlayer = 1;
+        let validMoves = [];
+        let mustCapture = false;
+        let multiJumpInProgress = false;
+
+        function initBoard() {
+            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(null));
+            
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    if ((row + col) % 2 === 1) {
+                        board[row][col] = { player: 1, king: false };
+                    }
+                }
+            }
+            
+            for (let row = 5; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    if ((row + col) % 2 === 1) {
+                        board[row][col] = { player: 2, king: false };
+                    }
+                }
+            }
+            
+            currentPlayer = 1;
+            selectedPiece = null;
+            validMoves = [];
+            mustCapture = false;
+            multiJumpInProgress = false;
+            updateMustCapture();
+            renderBoard();
+            updateStatus();
+        }
+
+        function renderBoard() {
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = '';
+            
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const square = document.createElement('div');
+                    square.className = 'square';
+                    square.className += (row + col) % 2 === 0 ? ' light' : ' dark';
+                    square.dataset.row = row;
+                    square.dataset.col = col;
+                    
+                    if (selectedPiece && selectedPiece.row === row && selectedPiece.col === col) {
+                        square.classList.add('selected');
+                    }
+                    
+                    if (validMoves.some(move => move.row === row && move.col === col)) {
+                        square.classList.add('valid-move');
+                    }
+                    
+                    const piece = board[row][col];
+                    if (piece) {
+                        const pieceElement = document.createElement('div');
+                        pieceElement.className = `piece player${piece.player}`;
+                        if (piece.king) {
+                            pieceElement.classList.add('king');
+                        }
+                        square.appendChild(pieceElement);
+                    }
+                    
+                    square.addEventListener('click', () => handleSquareClick(row, col));
+                    boardElement.appendChild(square);
+                }
+            }
+        }
+
+        function handleSquareClick(row, col) {
+            const piece = board[row][col];
+            
+            if (selectedPiece) {
+                const validMove = validMoves.find(move => move.row === row && move.col === col);
+                if (validMove) {
+                    movePiece(selectedPiece.row, selectedPiece.col, row, col, validMove.captures);
+                    return;
+                }
+            }
+            
+            if (piece && piece.player === currentPlayer) {
+                selectedPiece = { row, col };
+                validMoves = getValidMoves(row, col);
+                renderBoard();
+            } else {
+                selectedPiece = null;
+                validMoves = [];
+                renderBoard();
+            }
+        }
+
+        function getValidMoves(row, col) {
+            const piece = board[row][col];
+            if (!piece || piece.player !== currentPlayer) return [];
+            
+            const moves = [];
+            const directions = piece.king 
+                ? [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+                : piece.player === 1 
+                    ? [[1, -1], [1, 1]]
+                    : [[-1, -1], [-1, 1]];
+            
+            for (const [dRow, dCol] of directions) {
+                const newRow = row + dRow;
+                const newCol = col + dCol;
+                
+                if (isValidPosition(newRow, newCol) && !board[newRow][newCol]) {
+                    if (!mustCapture && !multiJumpInProgress) {
+                        moves.push({ row: newRow, col: newCol, captures: [] });
+                    }
+                }
+                
+                const jumpRow = row + dRow * 2;
+                const jumpCol = col + dCol * 2;
+                
+                if (isValidPosition(jumpRow, jumpCol) && 
+                    isValidPosition(newRow, newCol) &&
+                    board[newRow][newCol] && 
+                    board[newRow][newCol].player !== currentPlayer &&
+                    !board[jumpRow][jumpCol]) {
+                    moves.push({ 
+                        row: jumpRow, 
+                        col: jumpCol, 
+                        captures: [{ row: newRow, col: newCol }] 
+                    });
+                }
+            }
+            
+            if (mustCapture || multiJumpInProgress) {
+                return moves.filter(move => move.captures.length > 0);
+            }
+            
+            return moves;
+        }
+
+        function isValidPosition(row, col) {
+            return row >= 0 && row < ROWS && col >= 0 && col < COLS;
+        }
+
+        function movePiece(fromRow, fromCol, toRow, toCol, captures) {
+            const piece = board[fromRow][fromCol];
+            board[toRow][toCol] = piece;
+            board[fromRow][fromCol] = null;
+            
+            if (captures && captures.length > 0) {
+                captures.forEach(cap => {
+                    board[cap.row][cap.col] = null;
+                });
+                
+                const furtherCaptures = getValidMoves(toRow, toCol).filter(move => move.captures.length > 0);
+                if (furtherCaptures.length > 0) {
+                    selectedPiece = { row: toRow, col: toCol };
+                    validMoves = furtherCaptures;
+                    multiJumpInProgress = true;
+                    renderBoard();
+                    updateStatus();
+                    showMessage('⚡ Multi-jump combo! Continue your assault! ⚡');
+                    return;
+                }
+            }
+            
+            if ((piece.player === 1 && toRow === ROWS - 1) || 
+                (piece.player === 2 && toRow === 0)) {
+                if (!piece.king) {
+                    piece.king = true;
+                    showMessage('✦ COSMIC KING ASCENSION! ✦');
+                }
+            }
+            
+            selectedPiece = null;
+            validMoves = [];
+            multiJumpInProgress = false;
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateMustCapture();
+            
+            if (checkWin()) {
+                return;
+            }
+            
+            renderBoard();
+            updateStatus();
+        }
+
+        function updateMustCapture() {
+            mustCapture = false;
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece && piece.player === currentPlayer) {
+                        const moves = getValidMovesForCapture(row, col);
+                        if (moves.some(move => move.captures.length > 0)) {
+                            mustCapture = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        function getValidMovesForCapture(row, col) {
+            const piece = board[row][col];
+            if (!piece) return [];
+            
+            const moves = [];
+            const directions = piece.king 
+                ? [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+                : piece.player === 1 
+                    ? [[1, -1], [1, 1]]
+                    : [[-1, -1], [-1, 1]];
+            
+            for (const [dRow, dCol] of directions) {
+                const newRow = row + dRow;
+                const newCol = col + dCol;
+                const jumpRow = row + dRow * 2;
+                const jumpCol = col + dCol * 2;
+                
+                if (isValidPosition(jumpRow, jumpCol) && 
+                    isValidPosition(newRow, newCol) &&
+                    board[newRow][newCol] && 
+                    board[newRow][newCol].player !== piece.player &&
+                    !board[jumpRow][jumpCol]) {
+                    moves.push({ 
+                        row: jumpRow, 
+                        col: jumpCol, 
+                        captures: [{ row: newRow, col: newCol }] 
+                    });
+                }
+            }
+            
+            return moves;
+        }
+
+        function checkWin() {
+            let player1Pieces = 0;
+            let player2Pieces = 0;
+            let player1HasMoves = false;
+            let player2HasMoves = false;
+            
+            // Check if current player has any captures available
+            let currentPlayerHasCaptures = false;
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece && piece.player === currentPlayer) {
+                        if (getValidMovesForCapture(row, col).length > 0) {
+                            currentPlayerHasCaptures = true;
+                            break;
+                        }
+                    }
+                }
+                if (currentPlayerHasCaptures) break;
+            }
+            
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece) {
+                        if (piece.player === 1) {
+                            player1Pieces++;
+                            if (!player1HasMoves) {
+                                const captureMoves = getValidMovesForCapture(row, col);
+                                const regularMoves = getValidMoves(row, col);
+                                if (captureMoves.length > 0 || 
+                                    (!currentPlayerHasCaptures && regularMoves.length > 0)) {
+                                    player1HasMoves = true;
+                                }
+                            }
+                        } else {
+                            player2Pieces++;
+                            if (!player2HasMoves) {
+                                const captureMoves = getValidMovesForCapture(row, col);
+                                const regularMoves = getValidMoves(row, col);
+                                if (captureMoves.length > 0 || 
+                                    (!currentPlayerHasCaptures && regularMoves.length > 0)) {
+                                    player2HasMoves = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Only check if the current player (who just had their turn) has lost
+            if (currentPlayer === 1 && (player1Pieces === 0 || !player1HasMoves)) {
+                showMessage('🚀 VICTORY! Player 2 Dominates the Galaxy! 🚀');
+                return true;
+            }
+            
+            if (currentPlayer === 2 && (player2Pieces === 0 || !player2HasMoves)) {
+                showMessage('🌟 VICTORY! Player 1 Conquers the Cosmos! 🌟');
+                return true;
+            }
+            
+            return false;
+        }
+
+        function updateStatus() {
+            const turnIndicator = document.getElementById('turn-indicator');
+            turnIndicator.textContent = `Player ${currentPlayer}`;
+            turnIndicator.className = `info-value player${currentPlayer}-color`;
+            
+            let player1Count = 0;
+            let player2Count = 0;
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece) {
+                        if (piece.player === 1) player1Count++;
+                        else player2Count++;
+                    }
+                }
+            }
+            
+            document.getElementById('player1-count').textContent = player1Count;
+            document.getElementById('player2-count').textContent = player2Count;
+            
+            if (!multiJumpInProgress) {
+                if (mustCapture) {
+                    showMessage('⚔️ Mandatory strike! Capture an enemy vessel! ⚔️');
+                } else {
+                    showMessage(`🌟 Player ${currentPlayer}'s turn to command the fleet! 🌟`);
+                }
+            }
+        }
+
+        function showMessage(text) {
+            document.getElementById('message').textContent = text;
+        }
+
+        document.getElementById('reset-btn').addEventListener('click', initBoard);
+
+        initBoard();
+    </script>
 </body>
 </html>
