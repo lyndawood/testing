@@ -730,33 +730,57 @@
             let player1HasMoves = false;
             let player2HasMoves = false;
             
+            // Check if current player has any captures available
+            let currentPlayerHasCaptures = false;
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const piece = board[row][col];
+                    if (piece && piece.player === currentPlayer) {
+                        if (getValidMovesForCapture(row, col).length > 0) {
+                            currentPlayerHasCaptures = true;
+                            break;
+                        }
+                    }
+                }
+                if (currentPlayerHasCaptures) break;
+            }
+            
             for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLS; col++) {
                     const piece = board[row][col];
                     if (piece) {
                         if (piece.player === 1) {
                             player1Pieces++;
-                            if (getValidMovesForCapture(row, col).length > 0 || 
-                                (!mustCapture && getValidMoves(row, col).length > 0)) {
-                                player1HasMoves = true;
+                            if (!player1HasMoves) {
+                                const captureMoves = getValidMovesForCapture(row, col);
+                                const regularMoves = getValidMoves(row, col);
+                                if (captureMoves.length > 0 || 
+                                    (!currentPlayerHasCaptures && regularMoves.length > 0)) {
+                                    player1HasMoves = true;
+                                }
                             }
                         } else {
                             player2Pieces++;
-                            if (getValidMovesForCapture(row, col).length > 0 || 
-                                (!mustCapture && getValidMoves(row, col).length > 0)) {
-                                player2HasMoves = true;
+                            if (!player2HasMoves) {
+                                const captureMoves = getValidMovesForCapture(row, col);
+                                const regularMoves = getValidMoves(row, col);
+                                if (captureMoves.length > 0 || 
+                                    (!currentPlayerHasCaptures && regularMoves.length > 0)) {
+                                    player2HasMoves = true;
+                                }
                             }
                         }
                     }
                 }
             }
             
-            if (player1Pieces === 0 || !player1HasMoves) {
+            // Only check if the current player (who just had their turn) has lost
+            if (currentPlayer === 1 && (player1Pieces === 0 || !player1HasMoves)) {
                 showMessage('🚀 VICTORY! Player 2 Dominates the Galaxy! 🚀');
                 return true;
             }
             
-            if (player2Pieces === 0 || !player2HasMoves) {
+            if (currentPlayer === 2 && (player2Pieces === 0 || !player2HasMoves)) {
                 showMessage('🌟 VICTORY! Player 1 Conquers the Cosmos! 🌟');
                 return true;
             }
