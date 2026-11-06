@@ -8,3 +8,7 @@ test('sum adds two numbers correctly', () => {
   assert.strictEqual(sum(-1, 1), 0);
   assert.strictEqual(sum(10, 20), 30);
 });
+
+test('sum supports decimal values', () => {
+  assert.strictEqual(sum(0.5, 0.25), 0.75);
+});
